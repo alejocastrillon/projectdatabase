@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:messages id="messages" autoUpdate="true" showDetail="true" closable="true">
+            </p:messages>
+        </h:form>
+        <h:form title="Crear Usuario">
+            <p:panelGrid columns="2">
+                <p:outputLabel for="idusuario" value="Documento de Identidad: "/>
+                <p:inputText id="idusuario" value="#{usuarioBean.usuario.idusuario}" required="true" requiredMessage="Es necesario ingresar el documento de identidad"/>
+                <p:outputLabel for="nombre1" value="Primer Nombre: "/>
+                <p:inputText id="nombre1" value="#{usuarioBean.usuario.nombre1}" required="true" requiredMessage="Es necesario ingresar el primer nombre"/>
+                <p:outputLabel for="nombre2" value="Segundo Nombre: "/>
+                <p:inputText id="nombre2" value="#{usuarioBean.usuario.nombre2}"/>
+                <p:outputLabel for="apellido1" value="Primer Apellido: "/>
+                <p:inputText id="apellido1" value="#{usuarioBean.usuario.apellido1}" required="true" requiredMessage="Es necesario ingresar el primer apellido"/>
+                <p:outputLabel for="apellido2" value="Segundo Apellido: "/>
+                <p:inputText id="apellido2" value="#{usuarioBean.usuario.apellido2}"/>
+                <p:outputLabel for="username" value="Nombre de usuario: "/>
+                <p:inputText id="username" value="#{usuarioBean.usuario.username}" required="true" requiredMessage="Es necesario ingresar el nombre de usuario"/>
+                <p:outputLabel for="password" value="Contraseña: "/>
+                <p:password id="password" value="#{usuarioBean.usuario.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
+            </p:panelGrid>
+            <p:commandButton value="Guardar" icon="fa fa-save" actionListener="#{usuarioBean.makeUser}"/>
+        </h:form>
+    </h:body>
+</html>
+

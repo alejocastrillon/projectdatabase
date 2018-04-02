@@ -6,6 +6,8 @@
 package Facade;
 
 import Entities.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +29,16 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
 
     public UsuarioFacade() {
         super(Usuario.class);
+    }
+    
+    public Usuario validateLogIn(String username, String password){
+        Usuario userLogin = new Usuario();
+        try {
+            userLogin = (Usuario) getEntityManager().createNamedQuery("Usuario.logIn").setParameter("username", username).setParameter("password", password).getSingleResult();
+        } catch (Exception e) {
+            System.err.println("Error LogIn: " + e.getLocalizedMessage());
+        }
+        return userLogin;
     }
     
 }
