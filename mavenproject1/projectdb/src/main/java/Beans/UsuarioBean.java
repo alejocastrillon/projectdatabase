@@ -7,10 +7,11 @@ package Beans;
 
 import Entities.Usuario;
 import Facade.UsuarioFacade;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -19,17 +20,15 @@ import javax.faces.context.FacesContext;
  *
  * @author alejandro
  */
-@Named(value = "usuarioBean")
-@Dependent
+
 @ManagedBean
 public class UsuarioBean {
-    
-    private String username, password;
+
     @EJB
     private UsuarioFacade usuarioFacade;
     private Usuario usuario;
     private Usuario currentUser;
-    
+    private String username, password;
 
     /**
      * Creates a new instance of UsuarioBean
@@ -53,6 +52,14 @@ public class UsuarioBean {
         this.password = password;
     }
 
+    public UsuarioFacade getUsuarioFacade() {
+        return usuarioFacade;
+    }
+
+    public void setUsuarioFacade(UsuarioFacade usuarioFacade) {
+        this.usuarioFacade = usuarioFacade;
+    }
+    
     public Usuario getUsuario() {
         return usuario;
     }
@@ -60,23 +67,54 @@ public class UsuarioBean {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
-    public boolean validateLogin(){
+
+    /**
+     * Validate logIn
+     * @return 
+     */
+    public boolean validateLogin() {
         currentUser = usuarioFacade.validateLogIn(username, password);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
+        FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
         return currentUser != null;
     }
-    
-    public void makeUser(){
+
+    /**
+     * Return the encrypted password
+     * @param input
+     * @return 
+     */
+    public static String getMD5(String input) {
         try {
-            usuarioFacade.create(usuario);
-        } catch (Exception e) {
-            System.err.println("Error de creacion de usuario: " + e.getLocalizedMessage());
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
-    
+
+    /**
+     * Insert a user in database
+     */
+    public void makeUser() {
+        usuario.setPassword(getMD5(usuario.getPassword()));
+        try {
+            usuarioFacade.create(usuario);
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario creado exitosamente", null));
+        } catch (Exception e) {
+            System.err.println("Error de creacion de usuario: " + e.getLocalizedMessage());
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
+        }
+    }
+
     @PostConstruct
-    public void init(){
+    public void init() {
         username = new String();
         password = new String();
         usuario = new Usuario();

@@ -6,7 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -41,9 +41,8 @@ public class Cliente implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 15)
     @Column(name = "idcliente")
-    private String idcliente;
+    private Integer idcliente;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -61,26 +60,26 @@ public class Cliente implements Serializable {
     @Column(name = "apellido2")
     private String apellido2;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clienteIdcliente")
-    private List<Factura> facturaList;
+    private Collection<Factura> facturaCollection;
 
     public Cliente() {
     }
 
-    public Cliente(String idcliente) {
+    public Cliente(Integer idcliente) {
         this.idcliente = idcliente;
     }
 
-    public Cliente(String idcliente, String nombre1, String apellido1) {
+    public Cliente(Integer idcliente, String nombre1, String apellido1) {
         this.idcliente = idcliente;
         this.nombre1 = nombre1;
         this.apellido1 = apellido1;
     }
 
-    public String getIdcliente() {
+    public Integer getIdcliente() {
         return idcliente;
     }
 
-    public void setIdcliente(String idcliente) {
+    public void setIdcliente(Integer idcliente) {
         this.idcliente = idcliente;
     }
 
@@ -117,12 +116,12 @@ public class Cliente implements Serializable {
     }
 
     @XmlTransient
-    public List<Factura> getFacturaList() {
-        return facturaList;
+    public Collection<Factura> getFacturaCollection() {
+        return facturaCollection;
     }
 
-    public void setFacturaList(List<Factura> facturaList) {
-        this.facturaList = facturaList;
+    public void setFacturaCollection(Collection<Factura> facturaCollection) {
+        this.facturaCollection = facturaCollection;
     }
 
     @Override

@@ -6,7 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,17 +36,15 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByApellido1", query = "SELECT u FROM Usuario u WHERE u.apellido1 = :apellido1")
     , @NamedQuery(name = "Usuario.findByApellido2", query = "SELECT u FROM Usuario u WHERE u.apellido2 = :apellido2")
     , @NamedQuery(name = "Usuario.findByUsername", query = "SELECT u FROM Usuario u WHERE u.username = :username")
-    , @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")
-    , @NamedQuery(name = "Usuario.logIn", query = "SELECT u FROM Usuario u WHERE u.username = :username AND u.password = :password")})
+    , @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 15)
     @Column(name = "idusuario")
-    private String idusuario;
+    private Integer idusuario;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -76,18 +74,18 @@ public class Usuario implements Serializable {
     @Column(name = "password")
     private String password;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdusuario")
-    private List<Factura> facturaList;
+    private Collection<Factura> facturaCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdusuario")
-    private List<Almacen> almacenList;
+    private Collection<Almacen> almacenCollection;
 
     public Usuario() {
     }
 
-    public Usuario(String idusuario) {
+    public Usuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
 
-    public Usuario(String idusuario, String nombre1, String nombre2, String apellido1, String username, String password) {
+    public Usuario(Integer idusuario, String nombre1, String nombre2, String apellido1, String username, String password) {
         this.idusuario = idusuario;
         this.nombre1 = nombre1;
         this.nombre2 = nombre2;
@@ -96,11 +94,11 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    public String getIdusuario() {
+    public Integer getIdusuario() {
         return idusuario;
     }
 
-    public void setIdusuario(String idusuario) {
+    public void setIdusuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
 
@@ -153,21 +151,21 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public List<Factura> getFacturaList() {
-        return facturaList;
+    public Collection<Factura> getFacturaCollection() {
+        return facturaCollection;
     }
 
-    public void setFacturaList(List<Factura> facturaList) {
-        this.facturaList = facturaList;
+    public void setFacturaCollection(Collection<Factura> facturaCollection) {
+        this.facturaCollection = facturaCollection;
     }
 
     @XmlTransient
-    public List<Almacen> getAlmacenList() {
-        return almacenList;
+    public Collection<Almacen> getAlmacenCollection() {
+        return almacenCollection;
     }
 
-    public void setAlmacenList(List<Almacen> almacenList) {
-        this.almacenList = almacenList;
+    public void setAlmacenCollection(Collection<Almacen> almacenCollection) {
+        this.almacenCollection = almacenCollection;
     }
 
     @Override

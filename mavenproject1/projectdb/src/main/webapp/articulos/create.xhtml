@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:messages id="messages" autoUpdate="true" showDetail="true" closable="true">
+            </p:messages>
+        </h:form>
+        <h:form id="createArticle" title="Crear Articulo">
+            <p:panelGrid columns="2">
+                <p:outputLabel for="nombre" value="Nombre: "/>
+                <p:inputText id="nombre" value="#{articuloBean.articulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
+                <p:outputLabel for="descripcion" value="Descripcion: "/>
+                <p:inputTextarea id="descripcion" value="#{articuloBean.articulo.descripcion}" required="true" requiredMessage="Es necesario ingresar la descripcion del articulo"/>
+                <p:outputLabel for="precio_neto" value="Precio Neto: "/>
+                <p:inputNumber id="precio_neto" value="#{articuloBean.articulo.precioNeto}" required="true" requiredMessage="Es necesario ingresar el precio neto del articulo"/>
+                <p:outputLabel for="precio_venta" value="Precio Venta: "/>
+                <p:inputNumber id="precio_venta" value="#{articuloBean.articulo.precioVenta}" required="true" requiredMessage="Es necesario ingresar el precio de venta del articulo"/>
+            </p:panelGrid>
+            <p:commandButton value="Guardar" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.makeArticle}"/>
+        </h:form>
+        <p:dialog header="Editar Articulo" widgetVar="editArticle" modal="true">
+            <h:form id="editArt" title="Editar Articulo">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="idarticulo" value="Codigo: "/>
+                    <p:inputText id="idarticulo" value="#{articuloBean.editArticulo.idarticulo}"/>
+                    <p:outputLabel for="nombre" value="Nombre: "/>
+                    <p:inputText id="nombre" value="#{articuloBean.editArticulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
+                    <p:outputLabel for="descripcion" value="Descripcion: "/>
+                    <p:inputTextarea id="descripcion" value="#{articuloBean.editArticulo.descripcion}" required="true" requiredMessage="Es necesario ingresar la descripcion del articulo"/>
+                    <p:outputLabel for="precio_neto" value="Precio Neto: "/>
+                    <p:inputNumber id="precio_neto" value="#{articuloBean.editArticulo.precioNeto}" required="true" requiredMessage="Es necesario ingresar el precio neto del articulo"/>
+                    <p:outputLabel for="precio_venta" value="Precio Venta: "/>
+                    <p:inputNumber id="precio_venta" value="#{articuloBean.editArticulo.precioVenta}" required="true" requiredMessage="Es necesario ingresar el precio de venta del articulo"/>
+                </p:panelGrid>
+                <p:commandButton value="Editar" onsuccess="@this.hide()" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.editArticle}"/>
+            </h:form>
+
+        </p:dialog>
+
+        <h:form>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+        <p:outputLabel id="remove" value="#{articuloBean.removeArticulo.nombre}"/>
+        <p:dataTable id="tableArticles" value="#{articuloBean.allArticles}" var="dataarticle">
+            <p:column headerText="Id articulo">
+                <p:outputLabel value="#{dataarticle.idarticulo}"/>
+            </p:column>
+            <p:column headerText="Nombre">
+                <p:outputLabel value="#{dataarticle.nombre}"/>
+            </p:column>
+            <p:column headerText="Descripcion">
+                <p:outputLabel value="#{dataarticle.descripcion}"/>
+            </p:column>
+            <p:column headerText="Precio Neto">
+                <p:outputLabel value="#{dataarticle.precioNeto}"/>
+            </p:column>
+            <p:column headerText="Precio de Venta">
+                <p:outputLabel value="#{dataarticle.precioVenta}"/>
+            </p:column>
+            <p:column headerText="Acciones">
+                <h:form>
+                    <p:commandButton icon="fa fa-edit" update="@this :editArt" onclick="PF('editArticle').show();">
+                        <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.editArticulo}"/>
+                    </p:commandButton>
+                    <p:commandButton icon="fa fa-remove" update="@this :remove" onclick="PF('remArticle').show();">
+                        <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.removeArticulo}"/>
+                    </p:commandButton>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+    </h:body>
+</html>
+

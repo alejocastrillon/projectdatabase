@@ -6,7 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -54,7 +54,7 @@ public class Material implements Serializable {
     @Column(name = "unidad_medida")
     private String unidadMedida;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "materialIdmaterial")
-    private List<Almacen> almacenList;
+    private Collection<Almacen> almacenCollection;
 
     public Material() {
     }
@@ -94,12 +94,12 @@ public class Material implements Serializable {
     }
 
     @XmlTransient
-    public List<Almacen> getAlmacenList() {
-        return almacenList;
+    public Collection<Almacen> getAlmacenCollection() {
+        return almacenCollection;
     }
 
-    public void setAlmacenList(List<Almacen> almacenList) {
-        this.almacenList = almacenList;
+    public void setAlmacenCollection(Collection<Almacen> almacenCollection) {
+        this.almacenCollection = almacenCollection;
     }
 
     @Override

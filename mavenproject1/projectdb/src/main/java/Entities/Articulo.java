@@ -46,9 +46,7 @@ public class Articulo implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    @Size(max = 45)
     @Column(name = "descripcion")
     private String descripcion;
     @Basic(optional = false)
@@ -57,9 +55,8 @@ public class Articulo implements Serializable {
     private int precioNeto;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "precio_venta")
-    private String precioVenta;
+    private int precioVenta;
 
     public Articulo() {
     }
@@ -68,10 +65,9 @@ public class Articulo implements Serializable {
         this.idarticulo = idarticulo;
     }
 
-    public Articulo(Integer idarticulo, String nombre, String descripcion, int precioNeto, String precioVenta) {
+    public Articulo(Integer idarticulo, String nombre, int precioNeto, int precioVenta) {
         this.idarticulo = idarticulo;
         this.nombre = nombre;
-        this.descripcion = descripcion;
         this.precioNeto = precioNeto;
         this.precioVenta = precioVenta;
     }
@@ -108,11 +104,11 @@ public class Articulo implements Serializable {
         this.precioNeto = precioNeto;
     }
 
-    public String getPrecioVenta() {
+    public int getPrecioVenta() {
         return precioVenta;
     }
 
-    public void setPrecioVenta(String precioVenta) {
+    public void setPrecioVenta(int precioVenta) {
         this.precioVenta = precioVenta;
     }
 
