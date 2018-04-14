@@ -6,7 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByApellido1", query = "SELECT u FROM Usuario u WHERE u.apellido1 = :apellido1")
     , @NamedQuery(name = "Usuario.findByApellido2", query = "SELECT u FROM Usuario u WHERE u.apellido2 = :apellido2")
     , @NamedQuery(name = "Usuario.findByUsername", query = "SELECT u FROM Usuario u WHERE u.username = :username")
-    , @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")})
+    , @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")
+    , @NamedQuery(name = "Usuario.logIn", query = "SELECT u FROM Usuario u WHERE u.username = :username AND u.password = :password")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -74,9 +75,9 @@ public class Usuario implements Serializable {
     @Column(name = "password")
     private String password;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdusuario")
-    private Collection<Factura> facturaCollection;
+    private List<Factura> facturaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdusuario")
-    private Collection<Almacen> almacenCollection;
+    private List<Almacen> almacenList;
 
     public Usuario() {
     }
@@ -151,21 +152,21 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Factura> getFacturaCollection() {
-        return facturaCollection;
+    public List<Factura> getFacturaList() {
+        return facturaList;
     }
 
-    public void setFacturaCollection(Collection<Factura> facturaCollection) {
-        this.facturaCollection = facturaCollection;
+    public void setFacturaList(List<Factura> facturaList) {
+        this.facturaList = facturaList;
     }
 
     @XmlTransient
-    public Collection<Almacen> getAlmacenCollection() {
-        return almacenCollection;
+    public List<Almacen> getAlmacenList() {
+        return almacenList;
     }
 
-    public void setAlmacenCollection(Collection<Almacen> almacenCollection) {
-        this.almacenCollection = almacenCollection;
+    public void setAlmacenList(List<Almacen> almacenList) {
+        this.almacenList = almacenList;
     }
 
     @Override

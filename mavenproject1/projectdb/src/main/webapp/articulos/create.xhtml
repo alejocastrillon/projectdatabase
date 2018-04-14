@@ -8,10 +8,14 @@
         <title>Facelet Title</title>
     </h:head>
     <h:body>
+        <!--Show success or error messages-->
         <h:form>
             <p:messages id="messages" autoUpdate="true" showDetail="true" closable="true">
             </p:messages>
         </h:form>
+        <!--End show success or error messages-->
+
+        <!--Article's Form-->
         <h:form id="createArticle" title="Crear Articulo">
             <p:panelGrid columns="2">
                 <p:outputLabel for="nombre" value="Nombre: "/>
@@ -25,6 +29,9 @@
             </p:panelGrid>
             <p:commandButton value="Guardar" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.makeArticle}"/>
         </h:form>
+        <!--End article's form-->
+
+        <!--Edit article dialog-->
         <p:dialog header="Editar Articulo" widgetVar="editArticle" modal="true">
             <h:form id="editArt" title="Editar Articulo">
                 <p:panelGrid columns="2">
@@ -41,16 +48,24 @@
                 </p:panelGrid>
                 <p:commandButton value="Editar" onsuccess="@this.hide()" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.editArticle}"/>
             </h:form>
-
         </p:dialog>
+        <!-- End edit article dialog-->
 
-        <h:form>
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-            </p:confirmDialog>
-        </h:form>
+        <!-- Delete article dialog-->
+        <p:dialog widgetVar="remArticle" modal="true">
+            <h:form id="removeArt">
+                <p:outputLabel value="Desea eliminar el elemento #{articuloBean.removeArticulo.nombre} ?"/>
+                <p:panelGrid columns="2">
+                    <p:commandButton value="Si" icon="fa fa-check" actionListener="#{articuloBean.deleteArticle}" onsuccess="@this.hide()"/>
+                    <p:commandButton value="No" icon="fa fa-close" onsuccess="@this.hide()"/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+        <!-- End delete article dialog -->
+        
         <p:outputLabel id="remove" value="#{articuloBean.removeArticulo.nombre}"/>
+        
+        <!--Article's datatable-->
         <p:dataTable id="tableArticles" value="#{articuloBean.allArticles}" var="dataarticle">
             <p:column headerText="Id articulo">
                 <p:outputLabel value="#{dataarticle.idarticulo}"/>
@@ -69,12 +84,14 @@
             </p:column>
             <p:column headerText="Acciones">
                 <h:form>
+                    <!-- Action Buttons -->
                     <p:commandButton icon="fa fa-edit" update="@this :editArt" onclick="PF('editArticle').show();">
                         <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.editArticulo}"/>
                     </p:commandButton>
-                    <p:commandButton icon="fa fa-remove" update="@this :remove" onclick="PF('remArticle').show();">
+                    <p:commandButton icon="fa fa-remove" update="@this :remove :removeArt" onclick="PF('remArticle').show();">
                         <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.removeArticulo}"/>
                     </p:commandButton>
+                    <!-- End action button-->
                 </h:form>
             </p:column>
         </p:dataTable>

@@ -34,9 +34,8 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         try {
             userLogin = (Usuario) getEntityManager().createNamedQuery("Usuario.logIn").setParameter("username", username).setParameter("password", password).getSingleResult();
         } catch (Exception e) {
-            System.err.println("Error LogIn: " + e.getLocalizedMessage());
+            System.err.println("Error Login: " + e.getMessage());
         }
         return userLogin;
     }
-    
 }

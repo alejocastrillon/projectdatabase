@@ -6,7 +6,9 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,10 +16,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -57,6 +61,8 @@ public class Articulo implements Serializable {
     @NotNull
     @Column(name = "precio_venta")
     private int precioVenta;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "articuloIdarticulo")
+    private List<ArticulosFactura> articulosFacturaList;
 
     public Articulo() {
     }
@@ -110,6 +116,15 @@ public class Articulo implements Serializable {
 
     public void setPrecioVenta(int precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    @XmlTransient
+    public List<ArticulosFactura> getArticulosFacturaList() {
+        return articulosFacturaList;
+    }
+
+    public void setArticulosFacturaList(List<ArticulosFactura> articulosFacturaList) {
+        this.articulosFacturaList = articulosFacturaList;
     }
 
     @Override

@@ -5,6 +5,7 @@
  */
 package Beans;
 
+
 import Entities.Articulo;
 import Facade.ArticuloFacade;
 import java.util.List;
@@ -20,13 +21,10 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 public class ArticuloBean {
-    
+
     @EJB
     private ArticuloFacade articuloFacade;
-    private Articulo articulo;
-    private Articulo editArticulo;
-    private Articulo removeArticulo;
-
+    private Articulo articulo, editArticulo, removeArticulo;
     /**
      * Creates a new instance of ArticuloBean
      */
@@ -64,8 +62,6 @@ public class ArticuloBean {
     public void setRemoveArticulo(Articulo removeArticulo) {
         this.removeArticulo = removeArticulo;
     }
-    
-    
     
     /**
      * Insert a new article in database

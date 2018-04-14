@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
  *
  * @author alejandro
  */
-
 @ManagedBean
 public class UsuarioBean {
 
@@ -29,11 +28,34 @@ public class UsuarioBean {
     private Usuario usuario;
     private Usuario currentUser;
     private String username, password;
-
     /**
      * Creates a new instance of UsuarioBean
      */
     public UsuarioBean() {
+    }
+
+    public UsuarioFacade getUsuarioFacade() {
+        return usuarioFacade;
+    }
+
+    public void setUsuarioFacade(UsuarioFacade usuarioFacade) {
+        this.usuarioFacade = usuarioFacade;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Usuario getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(Usuario currentUser) {
+        this.currentUser = currentUser;
     }
 
     public String getUsername() {
@@ -51,23 +73,7 @@ public class UsuarioBean {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public UsuarioFacade getUsuarioFacade() {
-        return usuarioFacade;
-    }
-
-    public void setUsuarioFacade(UsuarioFacade usuarioFacade) {
-        this.usuarioFacade = usuarioFacade;
-    }
     
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
     /**
      * Validate logIn
      * @return 
@@ -112,11 +118,12 @@ public class UsuarioBean {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
-
     @PostConstruct
-    public void init() {
+    public void init(){
         username = new String();
         password = new String();
         usuario = new Usuario();
+        currentUser = new Usuario();
     }
+    
 }

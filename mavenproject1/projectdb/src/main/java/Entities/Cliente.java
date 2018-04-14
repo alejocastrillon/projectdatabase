@@ -6,7 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,7 +60,7 @@ public class Cliente implements Serializable {
     @Column(name = "apellido2")
     private String apellido2;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clienteIdcliente")
-    private Collection<Factura> facturaCollection;
+    private List<Factura> facturaList;
 
     public Cliente() {
     }
@@ -116,12 +116,12 @@ public class Cliente implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Factura> getFacturaCollection() {
-        return facturaCollection;
+    public List<Factura> getFacturaList() {
+        return facturaList;
     }
 
-    public void setFacturaCollection(Collection<Factura> facturaCollection) {
-        this.facturaCollection = facturaCollection;
+    public void setFacturaList(List<Factura> facturaList) {
+        this.facturaList = facturaList;
     }
 
     @Override
