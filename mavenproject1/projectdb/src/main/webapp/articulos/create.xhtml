@@ -15,89 +15,109 @@
         </h:form>
         <!--End show success or error messages-->
 
-        <!--Article's Form-->
-        <h:form id="createArticle" title="Crear Articulo">
-            <p:panelGrid columns="2">
-                <p:outputLabel for="nombre" value="Nombre: "/>
-                <p:inputText id="nombre" value="#{articuloBean.articulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
-                <p:outputLabel for="descripcion" value="Descripcion: "/>
-                <p:inputTextarea id="descripcion" value="#{articuloBean.articulo.descripcion}" required="true" requiredMessage="Es necesario ingresar la descripcion del articulo"/>
-                <p:outputLabel for="precio_neto" value="Precio Neto: "/>
-                <p:inputNumber id="precio_neto" value="#{articuloBean.articulo.precioNeto}" required="true" requiredMessage="Es necesario ingresar el precio neto del articulo"/>
-                <p:outputLabel for="precio_venta" value="Precio Venta: "/>
-                <p:inputNumber id="precio_venta" value="#{articuloBean.articulo.precioVenta}" required="true" requiredMessage="Es necesario ingresar el precio de venta del articulo"/>
-            </p:panelGrid>
-            <p:commandButton value="Guardar" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.makeArticle}"/>
-        </h:form>
-        <!--End article's form-->
-
-        <!--Edit article dialog-->
-        <p:dialog header="Editar Articulo" widgetVar="editArticle" modal="true">
-            <h:form id="editArt" title="Editar Articulo">
-                <p:panelGrid columns="2">
-                    <p:outputLabel for="idarticulo" value="Codigo: "/>
-                    <p:inputText id="idarticulo" value="#{articuloBean.editArticulo.idarticulo}"/>
-                    <p:outputLabel for="nombre" value="Nombre: "/>
-                    <p:inputText id="nombre" value="#{articuloBean.editArticulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
-                    <p:outputLabel for="descripcion" value="Descripcion: "/>
-                    <p:inputTextarea id="descripcion" value="#{articuloBean.editArticulo.descripcion}" required="true" requiredMessage="Es necesario ingresar la descripcion del articulo"/>
-                    <p:outputLabel for="precio_neto" value="Precio Neto: "/>
-                    <p:inputNumber id="precio_neto" value="#{articuloBean.editArticulo.precioNeto}" required="true" requiredMessage="Es necesario ingresar el precio neto del articulo"/>
-                    <p:outputLabel for="precio_venta" value="Precio Venta: "/>
-                    <p:inputNumber id="precio_venta" value="#{articuloBean.editArticulo.precioVenta}" required="true" requiredMessage="Es necesario ingresar el precio de venta del articulo"/>
-                </p:panelGrid>
-                <p:commandButton value="Editar" onsuccess="@this.hide()" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.editArticle}"/>
-            </h:form>
-        </p:dialog>
-        <!-- End edit article dialog-->
-
-        <!-- Delete article dialog-->
-        <p:dialog widgetVar="remArticle" modal="true">
-            <h:form id="removeArt">
-                <p:outputLabel value="Desea eliminar el elemento #{articuloBean.removeArticulo.nombre} ?"/>
-                <p:panelGrid columns="2">
-                    <p:commandButton value="Si" icon="fa fa-check" actionListener="#{articuloBean.deleteArticle}" onsuccess="@this.hide()"/>
-                    <p:commandButton value="No" icon="fa fa-close" onsuccess="@this.hide()"/>
-                </p:panelGrid>
-            </h:form>
-        </p:dialog>
-        <!-- End delete article dialog -->
-
-        <p:outputLabel id="remove" value="#{articuloBean.removeArticulo.nombre}"/>
-
-        <!--Article's datatable-->
-        <p:dataTable id="tableArticles" value="#{articuloBean.allArticles}" var="dataarticle">
-            <p:column headerText="Id articulo">
-                <p:outputLabel value="#{dataarticle.idarticulo}"/>
-            </p:column>
-            <p:column headerText="Nombre">
-                <p:outputLabel value="#{dataarticle.nombre}"/>
-            </p:column>
-            <p:column headerText="Descripcion">
-                <p:outputLabel value="#{dataarticle.descripcion}"/>
-            </p:column>
-            <p:column headerText="Precio Neto">
-                <p:outputLabel value="#{dataarticle.precioNeto}"/>
-            </p:column>
-            <p:column headerText="Precio de Venta">
-                <p:outputLabel value="#{dataarticle.precioVenta}"/>
-            </p:column>
-            <p:column headerText="Acciones">
-                <h:form>
-                    <!-- Action Buttons -->
-                    <p:commandButton icon="fa fa-edit" update="@this :editArt" onclick="PF('editArticle').show();">
-                        <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.editArticulo}"/>
-                    </p:commandButton>
-                    <p:commandButton icon="fa fa-remove" update="@this :remove :removeArt" onclick="PF('remArticle').show();">
-                        <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.removeArticulo}"/>
-                    </p:commandButton>
-                    <!-- End action button-->
-                </h:form>
-            </p:column>
-        </p:dataTable>
+        <!--Show info current user-->
         <h:form>
-            <p:commandLink actionListener="#{usuarioBean.redirect('facturas/index.xhtml')}" value="#{request.contextPath}"/>
+            <div style="width: 20%; margin-left: 80%">
+            <p:outputLabel value="Usuario: #{session.getAttribute('username')}"/>
+            <br/>
+            <p:commandLink value="LogOut" actionListener="#{usuarioBean.logOut}"/>
+            </div>
         </h:form>
+        <!--End show-->
+
+        <div style="width: 20%; float: left;">
+            <!--Menu-->
+            <h:form>
+                <p:menu>
+                    <p:menuitem value="Articulos" icon="fa fa-dropbox" actionListener="#{usuarioBean.redirect('articulos/create.xhtml')}"/>
+                    <p:menuitem value="Facturas" icon="fa fa-book" actionListener="#{usuarioBean.redirect('facturas/index.xhtml')}"/>
+                </p:menu>
+            </h:form>
+            <!--End Menu-->
+        </div>
+
+        <div style="width: 80%; float: left;">
+            <!--Article's Form-->
+            <h:form id="createArticle" title="Crear Articulo">
+                <p:panel header="Crear Articulo">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="nombre" value="Nombre: "/>
+                        <p:inputText id="nombre" value="#{articuloBean.articulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
+                        <p:outputLabel for="descripcion" value="Descripcion: "/>
+                        <p:inputTextarea id="descripcion" value="#{articuloBean.articulo.descripcion}"/>
+                        <p:outputLabel for="precio_neto" value="Precio Neto: "/>
+                        <p:inputNumber id="precio_neto" value="#{articuloBean.articulo.precioNeto}" required="true" requiredMessage="Es necesario ingresar el precio neto del articulo"/>
+                        <p:outputLabel for="precio_venta" value="Precio Venta: "/>
+                        <p:inputNumber id="precio_venta" value="#{articuloBean.articulo.precioVenta}" required="true" requiredMessage="Es necesario ingresar el precio de venta del articulo"/>
+                    </p:panelGrid>
+                    <p:commandButton value="Guardar" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.makeArticle}"/>
+                </p:panel>
+            </h:form>
+            <!--End article's form-->
+
+            <!--Edit article dialog-->
+            <p:dialog header="Editar Articulo" widgetVar="editArticle" modal="true">
+                <h:form id="editArt" title="Editar Articulo">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="idarticulo" value="Codigo: "/>
+                        <p:inputText id="idarticulo" value="#{articuloBean.editArticulo.idarticulo}"/>
+                        <p:outputLabel for="nombre" value="Nombre: "/>
+                        <p:inputText id="nombre" value="#{articuloBean.editArticulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
+                        <p:outputLabel for="descripcion" value="Descripcion: "/>
+                        <p:inputTextarea id="descripcion" value="#{articuloBean.editArticulo.descripcion}" required="true" requiredMessage="Es necesario ingresar la descripcion del articulo"/>
+                        <p:outputLabel for="precio_neto" value="Precio Neto: "/>
+                        <p:inputNumber id="precio_neto" value="#{articuloBean.editArticulo.precioNeto}" required="true" requiredMessage="Es necesario ingresar el precio neto del articulo"/>
+                        <p:outputLabel for="precio_venta" value="Precio Venta: "/>
+                        <p:inputNumber id="precio_venta" value="#{articuloBean.editArticulo.precioVenta}" required="true" requiredMessage="Es necesario ingresar el precio de venta del articulo"/>
+                    </p:panelGrid>
+                    <p:commandButton value="Editar" onsuccess="@this.hide()" update="@this :tableArticles" icon="fa fa-save" actionListener="#{articuloBean.editArticle}"/>
+                </h:form>
+            </p:dialog>
+            <!-- End edit article dialog-->
+
+            <!-- Delete article dialog-->
+            <p:dialog widgetVar="remArticle" modal="true">
+                <h:form id="removeArt">
+                    <p:outputLabel value="Desea eliminar el elemento #{articuloBean.removeArticulo.nombre} ?"/>
+                    <p:panelGrid columns="2">
+                        <p:commandButton value="Si" icon="fa fa-check" actionListener="#{articuloBean.deleteArticle}" onsuccess="@this.hide()"/>
+                        <p:commandButton value="No" icon="fa fa-close" onsuccess="@this.hide()"/>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+            <!-- End delete article dialog -->
+
+            <!--Article's datatable-->
+            <p:dataTable id="tableArticles" value="#{articuloBean.allArticles}" var="dataarticle">
+                <p:column headerText="Id articulo">
+                    <p:outputLabel value="#{dataarticle.idarticulo}"/>
+                </p:column>
+                <p:column headerText="Nombre">
+                    <p:outputLabel value="#{dataarticle.nombre}"/>
+                </p:column>
+                <p:column headerText="Descripcion">
+                    <p:outputLabel value="#{dataarticle.descripcion}"/>
+                </p:column>
+                <p:column headerText="Precio Neto">
+                    <p:outputLabel value="#{dataarticle.precioNeto}"/>
+                </p:column>
+                <p:column headerText="Precio de Venta">
+                    <p:outputLabel value="#{dataarticle.precioVenta}"/>
+                </p:column>
+                <p:column headerText="Acciones">
+                    <h:form>
+                        <!-- Action Buttons -->
+                        <p:commandButton icon="fa fa-edit" update="@this :editArt" onclick="PF('editArticle').show();">
+                            <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.editArticulo}"/>
+                        </p:commandButton>
+                        <!---<p:commandButton icon="fa fa-remove" update="@this :remove :removeArt" onclick="PF('remArticle').show();">
+                            <f:setPropertyActionListener value="#{dataarticle}" target="#{articuloBean.removeArticulo}"/>
+                        </p:commandButton>-->
+                        <!-- End action button-->
+                    </h:form>
+                </p:column>
+            </p:dataTable>
+        </div>
     </h:body>
 </html>
 

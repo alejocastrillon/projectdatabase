@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -120,6 +121,11 @@ public class ArticuloBean implements Serializable{
     
     @PostConstruct
     public void init(){
+        if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
+            ELContext elc = FacesContext.getCurrentInstance().getELContext();
+            UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
+            usuarioBean.redirect("index.xhtml");
+        }
         articulo = new Articulo();
         editArticulo = new Articulo();
         removeArticulo = new Articulo();

@@ -13,23 +13,27 @@
             </p:messages>
         </h:form>
         <h:form id="signUp" title="Crear Usuario">
-            <p:panelGrid columns="2">
-                <p:outputLabel for="idusuario" value="Documento de Identidad: "/>
-                <p:inputText id="idusuario" value="#{usuarioBean.usuario.idusuario}" required="true" requiredMessage="Es necesario ingresar el documento de identidad"/>
-                <p:outputLabel for="nombre1" value="Primer Nombre: "/>
-                <p:inputText id="nombre1" value="#{usuarioBean.usuario.nombre1}" required="true" requiredMessage="Es necesario ingresar el primer nombre"/>
-                <p:outputLabel for="nombre2" value="Segundo Nombre: "/>
-                <p:inputText id="nombre2" value="#{usuarioBean.usuario.nombre2}"/>
-                <p:outputLabel for="apellido1" value="Primer Apellido: "/>
-                <p:inputText id="apellido1" value="#{usuarioBean.usuario.apellido1}" required="true" requiredMessage="Es necesario ingresar el primer apellido"/>
-                <p:outputLabel for="apellido2" value="Segundo Apellido: "/>
-                <p:inputText id="apellido2" value="#{usuarioBean.usuario.apellido2}"/>
-                <p:outputLabel for="username" value="Nombre de usuario: "/>
-                <p:inputText id="username" value="#{usuarioBean.usuario.username}" required="true" requiredMessage="Es necesario ingresar el nombre de usuario"/>
-                <p:outputLabel for="password" value="Contraseña: "/>
-                <p:password id="password" value="#{usuarioBean.usuario.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
-            </p:panelGrid>
-            <p:commandButton value="Guardar" icon="fa fa-user-plus" update=":signUp" actionListener="#{usuarioBean.makeUser}"/>
+            <p:panel header="Crear Usuario" style="width: 40%; margin: 0 auto;">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="idusuario" value="Documento de Identidad: "/>
+                    <p:inputText id="idusuario" value="#{usuarioBean.usuario.idusuario}" required="true" requiredMessage="Es necesario ingresar el documento de identidad"/>
+                    <p:outputLabel for="nombre1" value="Primer Nombre: "/>
+                    <p:inputText id="nombre1" value="#{usuarioBean.usuario.nombre1}" required="true" requiredMessage="Es necesario ingresar el primer nombre"/>
+                    <p:outputLabel for="nombre2" value="Segundo Nombre: "/>
+                    <p:inputText id="nombre2" value="#{usuarioBean.usuario.nombre2}"/>
+                    <p:outputLabel for="apellido1" value="Primer Apellido: "/>
+                    <p:inputText id="apellido1" value="#{usuarioBean.usuario.apellido1}" required="true" requiredMessage="Es necesario ingresar el primer apellido"/>
+                    <p:outputLabel for="apellido2" value="Segundo Apellido: "/>
+                    <p:inputText id="apellido2" value="#{usuarioBean.usuario.apellido2}"/>
+                    <p:outputLabel for="username" value="Nombre de usuario: "/>
+                    <p:inputText id="username" value="#{usuarioBean.usuario.username}" required="true" requiredMessage="Es necesario ingresar el nombre de usuario"/>
+                    <p:outputLabel for="password" value="Contraseña: "/>
+                    <p:password id="password" value="#{usuarioBean.usuario.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
+                </p:panelGrid>
+                <p:commandButton value="Guardar" icon="fa fa-user-plus" update=":signUp" actionListener="#{usuarioBean.makeUser}"/>
+            </p:panel>
+            
+            <p:commandLink value="LogIn" process="@this" actionListener="#{usuarioBean.redirect('index.xhtml')}"/>
         </h:form>
     </h:body>
 </html>

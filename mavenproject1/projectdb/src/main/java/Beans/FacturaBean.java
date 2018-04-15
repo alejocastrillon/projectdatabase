@@ -125,6 +125,7 @@ public class FacturaBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Factura creada exitosamente", null));
                 factura = new Factura();
                 articulosFacturas = new ArrayList<>();
+                total = 0;
             } catch (Exception e) {
                 System.err.println("Error en la creacion de la factura: " + e.getMessage());
                 FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), null));
@@ -134,6 +135,11 @@ public class FacturaBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
+            ELContext elc = FacesContext.getCurrentInstance().getELContext();
+            UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
+            usuarioBean.redirect("index.xhtml");
+        }
         factura = new Factura();
         articulosFacturas = new ArrayList<>();
         articulosFactura = new ArticulosFactura();

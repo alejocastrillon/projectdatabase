@@ -96,6 +96,7 @@ public class UsuarioBean implements Serializable {
         if (currentUser != null) {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("current", currentUser);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", currentUser.getUsername());
             redirect("articulos/create.xhtml");
         } else {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login erroneo: username o contraseña erroneos", null));
@@ -112,6 +113,10 @@ public class UsuarioBean implements Serializable {
         return;
     }
 
+    public void logOut(){
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        redirect("index.xhtml");
+    }
     /**
      * Return the encrypted password
      *

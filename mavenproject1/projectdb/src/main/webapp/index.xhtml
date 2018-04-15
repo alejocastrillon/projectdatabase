@@ -13,13 +13,16 @@
             </p:messages>
         </h:form>
         <h:form title="Iniciar Sesion">
-            <p:panelGrid columns="2">
-                <p:outputLabel for="username" value="Nombre de Usuario: "/>
-                <p:inputText id="username" value="#{usuarioBean.username}" required="true" requiredMessage="Es necesario ingresar el nombre de usuario"/>
-                <p:outputLabel for="password" value="Contraseña: "/>
-                <p:password id="password" value="#{usuarioBean.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
-            </p:panelGrid>
-            <p:commandButton value="Iniciar Sesion" icon="fa fa-key" actionListener="#{usuarioBean.validateLogin}"/>
+            <p:panel header="LogIn" style="width: 40%; margin: 0 auto;">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:outputLabel for="username" value="Nombre de Usuario: "/>
+                    <p:inputText id="username" value="#{usuarioBean.username}" required="true" requiredMessage="Es necesario ingresar el nombre de usuario"/>
+                    <p:outputLabel for="password" value="Contraseña: "/>
+                    <p:password id="password" value="#{usuarioBean.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
+                    <p:commandButton value="Iniciar Sesion" icon="fa fa-key" actionListener="#{usuarioBean.validateLogin}"/>
+                    <p:commandButton value="Registrar usuario" icon="fa fa-user-plus" process="@this" actionListener="#{usuarioBean.redirect('usuarios/sign_up.xhtml')}"/>
+                </p:panelGrid>
+            </p:panel>
         </h:form>
     </h:body>
 </html>
