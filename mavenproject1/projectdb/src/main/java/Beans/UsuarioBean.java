@@ -7,13 +7,20 @@ package Beans;
 
 import Entities.Usuario;
 import Facade.UsuarioFacade;
+import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -21,13 +28,16 @@ import javax.faces.context.FacesContext;
  * @author alejandro
  */
 @ManagedBean
-public class UsuarioBean {
+@ViewScoped
+@SessionScoped
+public class UsuarioBean implements Serializable {
 
     @EJB
     private UsuarioFacade usuarioFacade;
     private Usuario usuario;
     private Usuario currentUser;
     private String username, password;
+
     /**
      * Creates a new instance of UsuarioBean
      */
@@ -73,21 +83,38 @@ public class UsuarioBean {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     /**
      * Validate logIn
-     * @return 
+     *
+     * @return
      */
     public boolean validateLogin() {
+        password = getMD5(password);
         currentUser = usuarioFacade.validateLogIn(username, password);
-        FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
+        if (currentUser != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("current", currentUser);
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
+            redirect("articulos/create.xhtml");
+        } else {
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login erroneo: username o contraseña erroneos", null));
+        }
         return currentUser != null;
+    }
+    
+    public void redirect(String url){
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("faces/" + url);
+        } catch (IOException ex) {
+            Logger.getLogger(UsuarioBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
      * Return the encrypted password
+     *
      * @param input
-     * @return 
+     * @return
      */
     public static String getMD5(String input) {
         try {
@@ -118,12 +145,21 @@ public class UsuarioBean {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
+
+    /**
+     * Return all the users
+     *
+     * @return
+     */
+    public List<Usuario> getAllUsers() {
+        return usuarioFacade.findAll();
+    }
+
     @PostConstruct
-    public void init(){
+    public void init() {
         username = new String();
         password = new String();
         usuario = new Usuario();
-        currentUser = new Usuario();
     }
-    
+
 }

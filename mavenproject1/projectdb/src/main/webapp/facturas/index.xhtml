@@ -20,7 +20,7 @@
             <h:form>
                 <p:panelGrid columns="2">
                     <p:outputLabel for="article" value="Articulo: "/>
-                    <p:selectOneListbox required="true" requiredMessage="Es necesario seleccionar el articulo a comprar" value="#{facturaBean.articulosFactura.articuloIdarticulo}" id="article" filter="true" filterMatchMode="contains">
+                    <p:selectOneListbox required="true" converter="articuloConverter" requiredMessage="Es necesario seleccionar el articulo a comprar" value="#{facturaBean.articulosFactura.articuloIdarticulo}" id="article" filter="true" filterMatchMode="contains">
                         <f:selectItems value="#{articuloBean.allArticles}" var="art" itemLabel="#{art.nombre}" itemValue="#{art}"/>
                     </p:selectOneListbox>
                     <p:outputLabel for="talla" value="Talla: "/>
@@ -33,39 +33,76 @@
                     <p:outputLabel for="cantidad" value="Cantidad:"/>
                     <p:inputNumber id="cantidad" value="#{facturaBean.articulosFactura.cantidad}" required="true" requiredMessage="Es necesario ingresar la cantidad a comprar del articulo"/>
                 </p:panelGrid>
-                <p:commandButton icon="fa fa-cart-arrow-down" value="Añadir" actionListener="#{facturaBean.addArticulo}" onsuccess="@this.hide()" update=":crearFactura"/>
+                <p:commandButton icon="fa fa-cart-arrow-down" value="Añadir" process="@this :crearFactura" actionListener="#{facturaBean.addArticulo}" onsuccess="@this.hide()" update=":crearFactura"/>
             </h:form>
         </p:dialog>
         <!--End modal-->
 
+        <!--Create client modal -->
+        <p:dialog modal="true" widgetVar="makClient">
+            <h:form>
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="idcliente" value="Codigo del cliente: "/>
+                    <p:inputText id="idcliente" value="#{clienteBean.cliente.idcliente}" required="true" requiredMessage="Es necesario ingresar el codigo del cliente"/>
+                    <p:outputLabel for="nombre1" value="Primer Nombre: "/>
+                    <p:inputText id="nombre1" value="#{clienteBean.cliente.nombre1}" required="true" requiredMessage="Es necesario ingresar el primer nombre del cliente"/>
+                    <p:outputLabel for="nombre2" value="Segundo Nombre: "/>
+                    <p:inputText id="nombre2" value="#{clienteBean.cliente.nombre2}"/>
+                    <p:outputLabel for="apellido1" value="Primer Apellido: "/>
+                    <p:inputText id="apellido1" value="#{clienteBean.cliente.apellido1}" required="true" requiredMessage="Es necesario ingresar el primer apellido del cliente"/>
+                    <p:outputLabel for="apellido2" value="Segundo Apellido: "/>
+                    <p:inputText id="apellido2" value="#{clienteBean.cliente.apellido2}"/>
+                </p:panelGrid>
+                <p:commandButton icon="fa fa-user-plus" value="Guardar" process="@this :crearFactura" update="@this :crearFactura" actionListener="#{clienteBean.makeClient}" onsuccess="@this.hide()"/>
+            </h:form>
+        </p:dialog>
+        <!--End create client modal-->
+
+        <!--Confirm remove article-->
+        <h:form>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+        <!--End confirm -->
+
+        <!--Register bills form-->
         <h:form id="crearFactura" title="Crear Factura">
-            <p:panelGrid>
-                <p:row>
+            <p:panel header="Registrar Factura" style="width: 95%; margin: 0 auto;">
+                <p:panelGrid columns="3" layout="grid">
                     <p:outputLabel for="cliente" value="Codigo cliente: "/>
-                    <p:inputText id="cliente" value="#{facturaBean.factura.clienteIdcliente}"/>
-                </p:row>
-                <p:row>
+                    <p:selectOneListbox filter="true" required="true" requiredMessage="Es necesario seleccionar o ingresar el cliente" filterMatchMode="contains" id="cliente" value="#{facturaBean.factura.clienteIdcliente}" converter="clienteConverter">
+                        <f:selectItems value="#{clienteBean.allClientes}" var="cliente" itemLabel="#{cliente.idcliente} - #{cliente.nombre1} #{cliente.nombre2} #{cliente.apellido1} #{cliente.apellido2}" itemValue="#{cliente}"/>
+                    </p:selectOneListbox>
+                    <p:commandButton icon="fa fa-user-plus" title="Añadir cliente" onclick="PF('makClient').show();"/>
                     <p:outputLabel value="Añadir articulos: "/>
                     <p:commandButton icon="fa fa-plus" title="Añadir articulo" onclick="PF('addArticle').show();"/>
-                </p:row>
-                <p:row>
-                    <p:dataTable id="dataArts" value="#{facturaBean.factura.articulosFacturaList}" var="artFact">
-                        <p:column headerText="Nombre del Articulo">
-                            <p:outputLabel value="#{artFact.articuloIdarticulo.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Talla">
-                            <p:outputLabel value="#{artFact.talla}"/>
-                        </p:column>
-                        <p:column headerText="Cantidad">
-                            <p:outputLabel value="#{artFact.cantidad}"/>
-                        </p:column>
-                        <p:column headerText="Costo">
-                            <p:outputLabel value="#{artFact.cantidad} * #{artFact.articuloIdarticulo.precioVenta}"/>
-                        </p:column>
-                    </p:dataTable>
-                </p:row>
-            </p:panelGrid>
+                </p:panelGrid>
+                <p:dataTable id="dataArts" value="#{facturaBean.factura.articulosFacturaList}" var="artFact">
+                    <p:column headerText="Nombre del Articulo">
+                        <p:outputLabel value="#{artFact.articuloIdarticulo.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Talla">
+                        <p:outputLabel value="#{artFact.talla}"/>
+                    </p:column>
+                    <p:column headerText="Cantidad">
+                        <p:outputLabel value="#{artFact.cantidad}"/>
+                    </p:column>
+                    <p:column headerText="Costo">
+                        <p:outputLabel value="#{artFact.cantidad * artFact.articuloIdarticulo.precioVenta}"/>
+                    </p:column>
+                    <p:column headerText="Acciones">
+                        <p:commandButton icon="fa fa-remove" actionListener="#{facturaBean.rmArticulo(artFact)}" update="@this">
+                            <p:confirm header="Confirmacion" message="¿Esta seguro que desea eliminar el articulo #{facturaBean.removeArticulosFactura} de la factura?" icon="fa fa-exclamation-triangle"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:outputLabel value="Total: $#{facturaBean.total}"/>
+                <p:commandButton icon="fa fa-money" value="Facturar" actionListener="#{facturaBean.makeFactura}" update="@this :crearFactura"/>
+            </p:panel>
         </h:form>
+        <!--End form-->
     </h:body>
 </html>
 

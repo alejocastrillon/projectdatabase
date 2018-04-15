@@ -17,7 +17,7 @@
                 <p:outputLabel for="username" value="Nombre de Usuario: "/>
                 <p:inputText id="username" value="#{usuarioBean.username}" required="true" requiredMessage="Es necesario ingresar el nombre de usuario"/>
                 <p:outputLabel for="password" value="Contraseña: "/>
-                <p:inputText id="password" value="#{usuarioBean.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
+                <p:password id="password" value="#{usuarioBean.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
             </p:panelGrid>
             <p:commandButton value="Iniciar Sesion" icon="fa fa-key" actionListener="#{usuarioBean.validateLogin}"/>
         </h:form>

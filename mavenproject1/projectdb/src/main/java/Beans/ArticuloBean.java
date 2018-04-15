@@ -8,11 +8,14 @@ package Beans;
 
 import Entities.Articulo;
 import Facade.ArticuloFacade;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -20,7 +23,9 @@ import javax.faces.context.FacesContext;
  * @author alejandro
  */
 @ManagedBean
-public class ArticuloBean {
+@ViewScoped
+@SessionScoped
+public class ArticuloBean implements Serializable{
 
     @EJB
     private ArticuloFacade articuloFacade;
