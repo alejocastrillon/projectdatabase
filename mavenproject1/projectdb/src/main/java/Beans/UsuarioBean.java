@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -93,8 +94,8 @@ public class UsuarioBean implements Serializable {
         password = getMD5(password);
         currentUser = usuarioFacade.validateLogIn(username, password);
         if (currentUser != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("current", currentUser);
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("current", currentUser);
             redirect("articulos/create.xhtml");
         } else {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login erroneo: username o contraseña erroneos", null));
@@ -104,10 +105,11 @@ public class UsuarioBean implements Serializable {
     
     public void redirect(String url){
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("faces/" + url);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/projectdb/faces/" + url);
         } catch (IOException ex) {
             Logger.getLogger(UsuarioBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return;
     }
 
     /**

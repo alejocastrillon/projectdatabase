@@ -62,9 +62,9 @@
             </h:form>
         </p:dialog>
         <!-- End delete article dialog -->
-        
+
         <p:outputLabel id="remove" value="#{articuloBean.removeArticulo.nombre}"/>
-        
+
         <!--Article's datatable-->
         <p:dataTable id="tableArticles" value="#{articuloBean.allArticles}" var="dataarticle">
             <p:column headerText="Id articulo">
@@ -95,6 +95,9 @@
                 </h:form>
             </p:column>
         </p:dataTable>
+        <h:form>
+            <p:commandLink actionListener="#{usuarioBean.redirect('facturas/index.xhtml')}" value="#{request.contextPath}"/>
+        </h:form>
     </h:body>
 </html>
 
