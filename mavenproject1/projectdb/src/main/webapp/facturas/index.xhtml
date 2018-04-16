@@ -12,15 +12,19 @@
         <h:form>
             <p:messages id="messages" autoUpdate="true" showDetail="true" closable="true">
             </p:messages>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
         </h:form>
         <!--End show success or error messages-->
-        
+
         <!--Show info current user-->
         <h:form>
             <div style="width: 20%; margin-left: 80%">
-            <p:outputLabel value="Usuario: #{session.getAttribute('username')}"/>
-            <br/>
-            <p:commandLink value="LogOut" actionListener="#{usuarioBean.logOut}"/>
+                <p:outputLabel value="Usuario: #{session.getAttribute('username')}"/>
+                <br/>
+                <p:commandLink value="LogOut" actionListener="#{usuarioBean.logOut}"/>
             </div>
         </h:form>
         <!--End show-->
@@ -31,6 +35,7 @@
                 <p:menu>
                     <p:menuitem value="Articulos" icon="fa fa-dropbox" actionListener="#{usuarioBean.redirect('articulos/create.xhtml')}"/>
                     <p:menuitem value="Facturas" icon="fa fa-book" actionListener="#{usuarioBean.redirect('facturas/index.xhtml')}"/>
+                    <p:menuitem value="Estadisticas" icon="fa fa-area-chart" actionListener="#{usuarioBean.redirect('estadisticas/index.xhtml')}"/>
                 </p:menu>
             </h:form>
             <!--End Menu-->
@@ -94,10 +99,12 @@
                 <p:panel header="Registrar Factura" style="width: 95%; margin: 0 auto;">
                     <p:panelGrid columns="3" layout="grid">
                         <p:outputLabel for="cliente" value="Codigo cliente: "/>
-                        <p:selectOneListbox filter="true" required="true" requiredMessage="Es necesario seleccionar o ingresar el cliente" filterMatchMode="contains" id="cliente" value="#{facturaBean.factura.clienteIdcliente}" converter="clienteConverter">
-                            <f:selectItems value="#{clienteBean.allClientes}" var="cliente" itemLabel="#{cliente.idcliente} - #{cliente.nombre1} #{cliente.nombre2} #{cliente.apellido1} #{cliente.apellido2}" itemValue="#{cliente}"/>
-                        </p:selectOneListbox>
-                        <p:commandButton icon="fa fa-user-plus" title="Añadir cliente" onclick="PF('makClient').show();"/>
+                        <p:autoComplete id="cliente" dropdown="true" value="#{facturaBean.factura.clienteIdcliente}" 
+                                        completeMethod="#{clienteBean.resultdataAutoComplete}" var="clientdata" 
+                                        itemLabel="#{clientdata.toStringAutoComplete()}" itemValue="#{clientdata}" 
+                                        converter="clienteConverter" forceSelection="true" required="true" 
+                                        requiredMessage="Es necesario seleccionar un cliente"/>
+                        <p:commandButton icon="fa fa-user-plus" title="Añadir cliente" process="@this" onclick="PF('makClient').show();"/>
                         <p:outputLabel value="Añadir articulos: "/>
                         <p:commandButton icon="fa fa-plus" title="Añadir articulo" onclick="PF('addArticle').show();"/>
                     </p:panelGrid>
@@ -123,10 +130,145 @@
                     <br/>
                     <p:outputLabel value="Total: $#{facturaBean.total}"/>
                     <br/>
-                    <p:commandButton icon="fa fa-money" value="Facturar" actionListener="#{facturaBean.makeFactura}" update="@this :crearFactura"/>
+                    <p:commandButton icon="fa fa-money" value="Facturar" actionListener="#{facturaBean.makeFactura}" update="@this :crearFactura :dataArt"/>
                 </p:panel>
             </h:form>
             <!--End form-->
+
+            <p:tabView id="dataArt">
+                <p:tab title="Facturas habilitadas">
+                    <p:dataTable value="#{facturaBean.getEnabledorDisabledFacturas(true)}" var="factura" rows="5"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15">
+                        <f:facet name="header">
+                            Facturas
+                        </f:facet>
+                        <p:column style="width:16px">
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column headerText="Id">
+                            <p:outputLabel value="#{factura.idfactura}"/>
+                        </p:column>
+                        <p:column headerText="Fecha y hora de venta">
+                            <p:outputLabel value="#{factura.fechaVenta}">
+                                <f:convertDateTime dateStyle="full"  pattern="dd/MM/yyyy ' a las ' hh:mm:ss a"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Realizado por">
+                            <p:outputLabel value="#{factura.usuarioIdusuario.username}"/>
+                        </p:column>
+                        <p:column headerText="Cliente">
+                            <p:outputLabel value="#{factura.clienteIdcliente.toString()}"/>
+                            <!--<p:outputLabel value="#{factura.clienteIdcliente.nombre1} #{factura.clienteIdcliente.nombre2} #{factura.clienteIdcliente.apellido1} #{factura.clienteIdcliente.apellido2}" />-->
+                        </p:column>
+                        <p:column headerText="Acciones">
+                            <h:form>
+                                <p:commandButton icon="fa fa-close" update="@this :dataArt" title="Deshabilitar" actionListener="#{facturaBean.disabledFactura(factura)}">
+                                    <p:confirm header="Confirmacion" message="¿Desea deshabilitar la factura N° #{factura.idfactura} ?" icon="fa fa-exclamation-triangle"/>
+                                </p:commandButton>
+                            </h:form>
+                        </p:column>
+                        <p:rowExpansion>
+                            <p:dataTable value="#{facturaBean.getArticulosFactura(factura)}" var="articulo">
+                                <f:facet name="header">
+                                    Detalle Factura N° #{factura.idfactura}
+                                </f:facet>
+                                <p:column headerText="Articulo">
+                                    <p:outputLabel value="#{articulo.articuloIdarticulo.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Talla">
+                                    <p:outputLabel value="#{articulo.talla}"/>
+                                </p:column>
+                                <p:column headerText="Cantidad">
+                                    <p:outputLabel value="#{articulo.cantidad}"/>
+                                </p:column>
+                                <p:column headerText="Valor">
+                                    <p:outputLabel value="#{articulo.cantidad * articulo.articuloIdarticulo.precioVenta}">
+                                        <f:convertNumber type="currency" currencySymbol="$" />
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:summaryRow>
+                                    <p:column colspan="3" style="text-align: right;">
+                                        <p:outputLabel value="Total: "/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{facturaBean.generateTotalFactura(factura.articulosFacturaList)}">
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                </p:summaryRow>
+                            </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                </p:tab>
+                <p:tab title="Facturas deshabilitadas" rendered="#{facturaBean.getEnabledorDisabledFacturas(false).size() > 0}">
+                    <p:dataTable id="disabledBills" value="#{facturaBean.getEnabledorDisabledFacturas(false)}" var="factura" rows="5"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15">
+                        <f:facet name="header">
+                            Facturas
+                        </f:facet>
+                        <p:column style="width:16px">
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column headerText="Id">
+                            <p:outputLabel value="#{factura.idfactura}"/>
+                        </p:column>
+                        <p:column headerText="Fecha y hora de venta">
+                            <p:outputLabel value="#{factura.fechaVenta}">
+                                <f:convertDateTime dateStyle="full"  pattern="dd/MM/yyyy ' a las ' hh:mm:ss a"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Realizado por">
+                            <p:outputLabel value="#{factura.usuarioIdusuario.username}"/>
+                        </p:column>
+                        <p:column headerText="Cliente">
+                            <p:outputLabel value="#{factura.clienteIdcliente.toString()}"/>
+                            <!--<p:outputLabel value="#{factura.clienteIdcliente.nombre1} #{factura.clienteIdcliente.nombre2} #{factura.clienteIdcliente.apellido1} #{factura.clienteIdcliente.apellido2}" />-->
+                        </p:column>
+                        <p:column headerText="Acciones">
+                            <h:form>
+                                <p:commandButton icon="fa fa-check" update="@this :dataArt" title="Deshabilitar" actionListener="#{facturaBean.enabledFactura(factura)}">
+                                    <p:confirm header="Confirmacion" message="¿Desea habilitar la factura N° #{factura.idfactura} ?" icon="fa fa-exclamation-triangle"/>
+                                </p:commandButton>
+                            </h:form>
+                        </p:column>
+                        <p:rowExpansion>
+                            <p:dataTable value="#{facturaBean.getArticulosFactura(factura)}" var="articulo">
+                                <f:facet name="header">
+                                    Detalle Factura N° #{factura.idfactura}
+                                </f:facet>
+                                <p:column headerText="Articulo">
+                                    <p:outputLabel value="#{articulo.articuloIdarticulo.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Talla">
+                                    <p:outputLabel value="#{articulo.talla}"/>
+                                </p:column>
+                                <p:column headerText="Cantidad">
+                                    <p:outputLabel value="#{articulo.cantidad}"/>
+                                </p:column>
+                                <p:column headerText="Valor">
+                                    <p:outputLabel value="#{articulo.cantidad * articulo.articuloIdarticulo.precioVenta}">
+                                        <f:convertNumber type="currency" currencySymbol="$" />
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:summaryRow>
+                                    <p:column colspan="3" style="text-align: right;">
+                                        <p:outputLabel value="Total: "/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{facturaBean.generateTotalFactura(factura.articulosFacturaList)}">
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                </p:summaryRow>
+                            </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                </p:tab>
+            </p:tabView>
         </div>
     </h:body>
 </html>

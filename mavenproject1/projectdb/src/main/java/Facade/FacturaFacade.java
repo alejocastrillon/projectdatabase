@@ -6,6 +6,7 @@
 package Facade;
 
 import Entities.Factura;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,32 @@ public class FacturaFacade extends AbstractFacade<Factura> {
 
     public FacturaFacade() {
         super(Factura.class);
+    }
+    
+    /**
+     * Return the bill items that was made in this month and year
+     * @param month
+     * @param year
+     * @return 
+     */
+    public List<Factura> getFacturaByMonthandYear(int month, int year){
+        try {
+            List<Factura> facturas = getEntityManager().createNamedQuery("Factura.findByMonthandYear").setParameter("month", month).setParameter("year", year).getResultList();
+            return facturas;
+        } catch (Exception e) {
+            System.err.println("Error al conseguir las facturas por mes: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public List<Factura> getEnabledorDisabledFacturas(boolean enable){
+        try {
+            List<Factura> facturas = getEntityManager().createNamedQuery("Factura.findByHabilitada").setParameter("habilitada", enable).getResultList();
+            return facturas;
+        } catch (Exception e) {
+            System.err.println("Error al conseguir las listas habilitadas o deshabilitadas: " + e.getMessage());
+        }
+        return null;
     }
     
 }

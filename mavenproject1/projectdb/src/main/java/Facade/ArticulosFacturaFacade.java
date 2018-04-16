@@ -5,7 +5,10 @@
  */
 package Facade;
 
+import Entities.Articulo;
 import Entities.ArticulosFactura;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +30,21 @@ public class ArticulosFacturaFacade extends AbstractFacade<ArticulosFactura> {
 
     public ArticulosFacturaFacade() {
         super(ArticulosFactura.class);
+    }
+    
+    /**
+     * Return the article sale list
+     * @param articulo
+     * @return 
+     */
+    public List<ArticulosFactura> getAllForArticle(Articulo articulo){
+        try {
+            List<ArticulosFactura> afs = getEntityManager().createNamedQuery("ArticulosFactura.findByArticulo").setParameter("idarticulo", articulo.getIdarticulo()).getResultList();
+            return afs;
+        } catch (Exception e) {
+            System.err.println("Error al conseguir la lista de Articulos en Factura: " + e.getMessage());
+        }
+        return null;
     }
     
 }

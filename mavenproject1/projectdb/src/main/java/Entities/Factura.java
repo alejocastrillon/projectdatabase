@@ -38,7 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Factura.findAll", query = "SELECT f FROM Factura f")
     , @NamedQuery(name = "Factura.findByIdfactura", query = "SELECT f FROM Factura f WHERE f.idfactura = :idfactura")
     , @NamedQuery(name = "Factura.findByFechaVenta", query = "SELECT f FROM Factura f WHERE f.fechaVenta = :fechaVenta")
-    , @NamedQuery(name = "Factura.findByHabilitada", query = "SELECT f FROM Factura f WHERE f.habilitada = :habilitada")})
+    , @NamedQuery(name = "Factura.findByHabilitada", query = "SELECT f FROM Factura f WHERE f.habilitada = :habilitada")
+    , @NamedQuery(name = "Factura.findByMonthandYear", query = "SELECT f FROM Factura f WHERE FUNC('MONTH', f.fechaVenta) = :month AND FUNC('YEAR', f.fechaVenta) = :year")})
 public class Factura implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,9 +49,8 @@ public class Factura implements Serializable {
     @Column(name = "idfactura")
     private Integer idfactura;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "fecha_venta")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaVenta;
     @Basic(optional = false)
     @NotNull

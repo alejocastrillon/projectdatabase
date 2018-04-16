@@ -10,7 +10,9 @@ import Entities.Factura;
 import Entities.Usuario;
 import Facade.FacturaFacade;
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -112,12 +114,33 @@ public class FacturaBean implements Serializable {
         total = total - (af.getCantidad() * af.getArticuloIdarticulo().getPrecioVenta());
         factura.getArticulosFacturaList().remove(af);
     }
+    
+    /**
+     * Return the article attached to bills for view implementation
+     * @param f
+     * @return 
+     */
+    public List<ArticulosFactura> getArticulosFactura(Factura f){
+        return f.getArticulosFacturaList();
+    }
+    
+    public Integer generateTotalFactura(List<ArticulosFactura> afs){
+        Integer total = 0;
+        for (ArticulosFactura af : afs) {
+            total += af.getCantidad() * af.getArticuloIdarticulo().getPrecioVenta();
+        }
+        return total;
+    }
 
+    /**
+     * Insert a bill into database
+     */
     public void makeFactura() {
         Usuario userCurrent = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current");
         if (userCurrent != null) {
+            Calendar c = Calendar.getInstance();
             factura.setIdfactura(facturaFacade.findAll().size() + 1);
-            factura.setFechaVenta(new Date());
+            factura.setFechaVenta(c.getTime());
             factura.setUsuarioIdusuario(userCurrent);
             factura.setHabilitada(true);
             try {
@@ -130,6 +153,64 @@ public class FacturaBean implements Serializable {
                 System.err.println("Error en la creacion de la factura: " + e.getMessage());
                 FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), null));
             }
+        }
+        getAllFacturas();
+    }
+    
+    /**
+     * Return the bills generated in this month and year
+     * @param month
+     * @param year
+     * @return 
+     */
+    public List<Factura> getFacturasByMonthandYear(int month, int year){
+        return facturaFacade.getFacturaByMonthandYear(month, year);
+    }
+    
+    /**
+     * Return the enabled or disabled bills
+     * @param enable
+     * @return 
+     */
+    public List<Factura> getEnabledorDisabledFacturas(boolean enable){
+        return facturaFacade.getEnabledorDisabledFacturas(enable);
+    }
+    
+    /**
+     * Return all the bills
+     * @return 
+     */
+    public List<Factura> getAllFacturas(){
+        return facturaFacade.findAll();
+    }
+    
+    /**
+     * Disable a bill
+     * @param factura 
+     */
+    public void disabledFactura(Factura factura){
+        factura.setHabilitada(false);
+        try {
+            facturaFacade.edit(factura);
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Factura deshabilitada", null));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), null));
+            System.err.println("Error al deshabilitar factura: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Enable a bill
+     * @param factura 
+     */
+    public void enabledFactura(Factura factura){
+        factura.setHabilitada(true);
+        try {
+            facturaFacade.edit(factura);
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Factura habilitada", null));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), null));
+            System.err.println("Error al deshabilitar factura: " + e.getMessage());
         }
     }
 

@@ -8,6 +8,7 @@ package Beans;
 import Entities.Cliente;
 import Facade.ClienteFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -24,11 +25,12 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @ViewScoped
 @SessionScoped
-public class ClienteBean implements Serializable{
+public class ClienteBean implements Serializable {
 
     @EJB
     private ClienteFacade clienteFacade;
     private Cliente cliente;
+
     /**
      * Creates a new instance of ClienteBean
      */
@@ -50,11 +52,42 @@ public class ClienteBean implements Serializable{
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+
+    public List<Cliente> resultdataAutoComplete(String query) {
+        List<Cliente> clientes = getAllClientes();
+        List<Cliente> autoComplete = new ArrayList<>();
+        if (query.equals("")) {
+            return clientes;
+        } else {
+            for (Cliente cliente1 : clientes) {
+                System.out.println(cliente1.getNombre1() + " : " + query);
+                System.out.println(cliente1.getNombre1().equals(query));
+                String idCliente = String.valueOf(cliente1.getIdcliente());
+                String nombreCompleto = cliente1.getNombre1() + " " + cliente1.getNombre2() + " " + cliente1.getApellido1() + " " + cliente1.getApellido2();
+                if (validateDataAutoComplete(cliente1, idCliente, nombreCompleto, query)) {
+                    autoComplete.add(cliente1);
+                }
+            }
+            return autoComplete;
+        }
+    }
     
+    /**
+     * Validate params for autoComplete client data
+     * @param cliente1
+     * @param idCliente
+     * @param nombreCompleto
+     * @param query
+     * @return 
+     */
+    public boolean validateDataAutoComplete(Cliente cliente1, String idCliente, String nombreCompleto, String query){
+        return idCliente.equals(query) || idCliente.startsWith(query) || cliente1.getNombre1().equals(query) || cliente1.getNombre2().equals(query) || cliente1.getApellido1().equals(query) || cliente1.getApellido2().equals(query) || nombreCompleto.startsWith(query) || nombreCompleto.endsWith(query) || nombreCompleto.equals(query) || cliente1.getNombre1().startsWith(query) || cliente1.getNombre2().startsWith(query) || cliente1.getApellido1().startsWith(query) || cliente1.getApellido2().startsWith(query);
+    }
+
     /**
      * Insert a client into database
      */
-    public void makeClient(){
+    public void makeClient() {
         try {
             clienteFacade.create(cliente);
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente creado exitosamente", null));
@@ -63,13 +96,13 @@ public class ClienteBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), null));
         }
     }
-    
-    public List<Cliente> getAllClientes(){
+
+    public List<Cliente> getAllClientes() {
         return clienteFacade.findAll();
     }
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         cliente = new Cliente();
     }
 }
