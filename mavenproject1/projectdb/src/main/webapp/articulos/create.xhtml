@@ -41,7 +41,7 @@
             <!--Article's Form-->
             <h:form id="createArticle" title="Crear Articulo">
                 <p:panel header="Crear Articulo">
-                    <p:panelGrid columns="2">
+                    <p:panelGrid columns="2" layout="grid">
                         <p:outputLabel for="nombre" value="Nombre: "/>
                         <p:inputText id="nombre" value="#{articuloBean.articulo.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
                         <p:outputLabel for="descripcion" value="Descripcion: "/>
@@ -80,7 +80,7 @@
             <p:dialog widgetVar="remArticle" modal="true">
                 <h:form id="removeArt">
                     <p:outputLabel value="Desea eliminar el elemento #{articuloBean.removeArticulo.nombre} ?"/>
-                    <p:panelGrid columns="2">
+                    <p:panelGrid columns="2" layout="grid">
                         <p:commandButton value="Si" icon="fa fa-check" actionListener="#{articuloBean.deleteArticle}" onsuccess="@this.hide()"/>
                         <p:commandButton value="No" icon="fa fa-close" onsuccess="@this.hide()"/>
                     </p:panelGrid>

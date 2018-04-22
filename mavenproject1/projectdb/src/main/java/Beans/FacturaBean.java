@@ -36,6 +36,7 @@ public class FacturaBean implements Serializable {
     private Factura factura;
     private ArticulosFactura articulosFactura;
     private List<ArticulosFactura> articulosFacturas;
+    private List<Factura> filteredFacturas;
     private int total = 0;
     private ArticulosFactura removeArticulosFactura;
 
@@ -85,6 +86,15 @@ public class FacturaBean implements Serializable {
         this.removeArticulosFactura = removeArticulosFactura;
     }
 
+    public List<Factura> getFilteredFacturas() {
+        return filteredFacturas;
+    }
+
+    public void setFilteredFacturas(List<Factura> filteredFacturas) {
+        this.filteredFacturas = filteredFacturas;
+    }
+
+    
     public int getTotal() {
         return total;
     }

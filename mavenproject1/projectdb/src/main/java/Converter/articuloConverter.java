@@ -18,7 +18,7 @@ import javax.faces.convert.FacesConverter;
  * @author alejandro
  */
 
- @FacesConverter("articuloConverter")
+@FacesConverter("articuloConverter")
 public class articuloConverter implements Converter{
 
     @Override
