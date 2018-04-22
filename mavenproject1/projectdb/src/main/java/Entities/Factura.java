@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Factura.findByIdfactura", query = "SELECT f FROM Factura f WHERE f.idfactura = :idfactura")
     , @NamedQuery(name = "Factura.findByFechaVenta", query = "SELECT f FROM Factura f WHERE f.fechaVenta = :fechaVenta")
     , @NamedQuery(name = "Factura.findByHabilitada", query = "SELECT f FROM Factura f WHERE f.habilitada = :habilitada")
-    , @NamedQuery(name = "Factura.findByMonthandYear", query = "SELECT f FROM Factura f WHERE FUNC('MONTH', f.fechaVenta) = :month AND FUNC('YEAR', f.fechaVenta) = :year")})
+    , @NamedQuery(name = "Factura.findByMonthandYear", query = "SELECT f FROM Factura f WHERE FUNC('MONTH', f.fechaVenta) = :month AND FUNC('YEAR', f.fechaVenta) = :year AND f.habilitada = 1")})
 public class Factura implements Serializable {
 
     private static final long serialVersionUID = 1L;

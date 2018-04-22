@@ -77,7 +77,7 @@ public class EstadisticasBean implements Serializable {
         ArticuloFacturaBean articuloFacturaBean = (ArticuloFacturaBean) eLContext.getELResolver().getValue(eLContext, null, "articuloFacturaBean");
         List<ArticulosFactura> afs = articuloFacturaBean.getAllArticulosFactura();
         for (ArticulosFactura af : afs) {
-            if (af.getArticuloIdarticulo().equals(articulo)) {
+            if ((af.getArticuloIdarticulo().equals(articulo)) && (af.getFacturaIdfactura().getHabilitada() == true)) {
                 cantidad += af.getCantidad();
             }
         }
