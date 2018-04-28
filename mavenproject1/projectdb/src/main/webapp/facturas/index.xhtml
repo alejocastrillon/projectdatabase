@@ -23,7 +23,7 @@
         <!-- Current User info-->
         <ui:include src="../menu/header.xhtml"/>
         <!-- End current user-->
-        
+
         <!--Menu Section-->
         <ui:include src="../menu/nav.xhtml"/>
         <!--End Menu section-->
@@ -207,6 +207,8 @@
                     <h:form>
                         <p:dataTable id="disabledBills" value="#{facturaBean.getEnabledorDisabledFacturas(false)}" var="factura" rows="5"
                                      paginator="true"
+                                     filteredValue="#{facturaBean.filteredFacturas}"
+                                     widgetVar="tablaFacturaDeshabilitada"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="5,10,15">
                             <f:facet name="header">
@@ -221,7 +223,7 @@
                             <p:column headerText="Fecha de venta" style="width: auto;" filterBy="#{factura.fechaVenta}" filterMatchMode="contains">
                                 <f:facet name="filter">
                                     <p:calendar navigator="true" maxdate="#{currentDate}" pattern="dd/MM/yyyy">
-                                        <p:ajax event="dateSelect" oncomplete="PF('tablaFactura').filter()" />
+                                        <p:ajax event="dateSelect" oncomplete="PF('tablaFacturaDeshabilitada').filter()" />
                                     </p:calendar>
                                 </f:facet>
                                 <p:outputLabel value="#{factura.fechaVenta}">
@@ -244,19 +246,17 @@
                                         dropdown="true"
                                         emptyMessage="No hay clientes con ese parametro"
                                         itemLabel="#{clientdata.toStringAutoComplete()}" itemValue="#{clientdata.toString()}" 
-                                        onblur="PF('tablaFactura').filter()" onkeypress="PF('tablaFactura').filter()">
-                                        <p:ajax event="itemSelect" onstart="PF('tablaFactura').filter()"/>
+                                        onblur="PF('tablaFacturaDeshabilitada').filter()" onkeypress="PF('tablaFacturaDeshabilitada').filter()">
+                                        <p:ajax event="itemSelect" onstart="PF('tablaFacturaDeshabilitada').filter()"/>
                                     </p:autoComplete>
                                 </f:facet>
                                 <p:outputLabel value="#{factura.clienteIdcliente.toString()}"/>
                                 <!--<p:outputLabel value="#{factura.clienteIdcliente.nombre1} #{factura.clienteIdcliente.nombre2} #{factura.clienteIdcliente.apellido1} #{factura.clienteIdcliente.apellido2}" />-->
                             </p:column>
                             <p:column style="width: 40px;">
-                                <h:form>
-                                    <p:commandButton icon="fa fa-check" update="@this :dataArt" title="Deshabilitar" actionListener="#{facturaBean.enabledFactura(factura)}">
-                                        <p:confirm header="Confirmacion" message="¿Desea habilitar la factura N° #{factura.idfactura} ?" icon="fa fa-exclamation-triangle"/>
-                                    </p:commandButton>
-                                </h:form>
+                                <p:commandButton icon="fa fa-check" update="@this :dataArt" title="Deshabilitar" actionListener="#{facturaBean.enabledFactura(factura)}">
+                                    <p:confirm header="Confirmacion" message="¿Desea habilitar la factura N° #{factura.idfactura} ?" icon="fa fa-exclamation-triangle"/>
+                                </p:commandButton>
                             </p:column>
                             <p:rowExpansion>
                                 <p:dataTable value="#{facturaBean.getArticulosFactura(factura)}" var="articulo">
