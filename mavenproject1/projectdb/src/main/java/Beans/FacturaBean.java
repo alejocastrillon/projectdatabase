@@ -10,10 +10,8 @@ import Entities.Factura;
 import Entities.Usuario;
 import Facade.FacturaFacade;
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -135,11 +133,11 @@ public class FacturaBean implements Serializable {
     }
     
     public Integer generateTotalFactura(List<ArticulosFactura> afs){
-        Integer total = 0;
+        Integer totalFactura = 0;
         for (ArticulosFactura af : afs) {
-            total += af.getCantidad() * af.getArticuloIdarticulo().getPrecioVenta();
+            totalFactura += af.getCantidad() * af.getArticuloIdarticulo().getPrecioVenta();
         }
-        return total;
+        return totalFactura;
     }
 
     /**

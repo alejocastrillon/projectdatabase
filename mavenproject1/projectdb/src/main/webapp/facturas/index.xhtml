@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Facturacion</title>
     </h:head>
     <h:body>
         <!--Show success or error messages-->
@@ -81,7 +81,9 @@
                                         completeMethod="#{clienteBean.resultdataAutoComplete}" var="clientdata" 
                                         itemLabel="#{clientdata.toStringAutoComplete()}" itemValue="#{clientdata}" 
                                         converter="clienteConverter" forceSelection="true" required="true" 
-                                        requiredMessage="Es necesario seleccionar un cliente"/>
+                                        requiredMessage="Es necesario seleccionar un cliente">
+                            <p:ajax event="itemSelect" onstart="#{facturaBean.factura.clienteIdcliente}"/>
+                        </p:autoComplete>
                         <p:commandButton icon="fa fa-user-plus" title="Añadir cliente" process="@this" onclick="PF('makClient').show();"/>
                         <p:outputLabel value="Añadir articulos: "/>
                         <p:commandButton icon="fa fa-plus" title="Añadir articulo" process="@this" onclick="PF('addArticle').show();"/>
