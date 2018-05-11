@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Materiales</title>
+    </h:head>
+    <h:body>
+        <!--Show success or error messages-->
+        <h:form>
+            <p:messages id="messages" autoUpdate="true" showDetail="true" closable="true">
+            </p:messages>
+        </h:form>
+        <!--End show success or error messages-->
+
+        <!-- Current User info-->
+        <ui:include src="../menu/header.xhtml"/>
+        <!-- End current user-->
+        
+        <!--Menu Section-->
+        <ui:include src="../menu/nav.xhtml"/>
+        <!--End Menu section-->
+        
+        <div style="width: 80%; float: left;">
+            <h:form id="crearMaterial" title="Crear Material">
+                <p:panel header="Crear Material">
+                    <p:panelGrid columns="2" layout="grid">
+                        <p:outputLabel for="nombre" value="Nombre: "/>
+                        <p:inputText id="nombre" value="#{materialBean.material.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
+                        <p:outputLabel for="unidad" value="Unidad: "/>
+                        <p:selectOneListbox id="unidad" value="#{materialBean.material.unidadMedida}" required="true" requiredMessage="Es necesario seleccionar una unidad de medida">
+                            <f:selectItem itemLabel="Metros" itemValue="metros"/>
+                        </p:selectOneListbox>
+                        
+                    </p:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+
