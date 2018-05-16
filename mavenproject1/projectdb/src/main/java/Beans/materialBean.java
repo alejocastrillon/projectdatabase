@@ -23,8 +23,6 @@ import javax.faces.context.FacesContext;
  * @author alejandro
  */
 
-/*Debe de comenzar a programar */
-//otroas
 @ManagedBean
 @ViewScoped
 @SessionScoped
