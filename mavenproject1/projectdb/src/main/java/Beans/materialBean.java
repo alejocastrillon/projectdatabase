@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
  */
 
 /*Debe de comenzar a programar */
+//otro
 @ManagedBean
 @ViewScoped
 @SessionScoped
