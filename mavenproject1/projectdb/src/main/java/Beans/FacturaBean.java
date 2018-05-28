@@ -92,7 +92,6 @@ public class FacturaBean implements Serializable {
         this.filteredFacturas = filteredFacturas;
     }
 
-    
     public int getTotal() {
         return total;
     }
@@ -105,11 +104,17 @@ public class FacturaBean implements Serializable {
      * Add article to bill
      */
     public void addArticulo() {
-        articulosFactura.setFacturaIdfactura(factura);
-        articulosFacturas.add(articulosFactura);
-        factura.setArticulosFacturaList(articulosFacturas);
-        total = total + (articulosFactura.getCantidad() * articulosFactura.getArticuloIdarticulo().getPrecioVenta());
-        articulosFactura = new ArticulosFactura();
+        ELContext elc = FacesContext.getCurrentInstance().getELContext();
+        inventarioBean b = (inventarioBean) elc.getELResolver().getValue(elc, null, "inventarioBean");
+        if (articulosFactura.getCantidad() <= b.getPrendasArticulo(articulosFactura.getArticuloIdarticulo())) {
+            articulosFactura.setFacturaIdfactura(factura);
+            articulosFacturas.add(articulosFactura);
+            factura.setArticulosFacturaList(articulosFacturas);
+            total = total + (articulosFactura.getCantidad() * articulosFactura.getArticuloIdarticulo().getPrecioVenta());
+            articulosFactura = new ArticulosFactura();
+        } else {
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_FATAL, "No hay tantas unidades disponibles de " + articulosFactura.getArticuloIdarticulo().getNombre(), null));
+        }
     }
 
     /**
@@ -122,17 +127,18 @@ public class FacturaBean implements Serializable {
         total = total - (af.getCantidad() * af.getArticuloIdarticulo().getPrecioVenta());
         factura.getArticulosFacturaList().remove(af);
     }
-    
+
     /**
      * Return the article attached to bills for view implementation
+     *
      * @param f
-     * @return 
+     * @return
      */
-    public List<ArticulosFactura> getArticulosFactura(Factura f){
+    public List<ArticulosFactura> getArticulosFactura(Factura f) {
         return f.getArticulosFacturaList();
     }
-    
-    public Integer generateTotalFactura(List<ArticulosFactura> afs){
+
+    public Integer generateTotalFactura(List<ArticulosFactura> afs) {
         Integer totalFactura = 0;
         for (ArticulosFactura af : afs) {
             totalFactura += af.getCantidad() * af.getArticuloIdarticulo().getPrecioVenta();
@@ -153,6 +159,11 @@ public class FacturaBean implements Serializable {
             factura.setHabilitada(true);
             try {
                 facturaFacade.create(factura);
+                ELContext elc = FacesContext.getCurrentInstance().getELContext();
+                inventarioBean b = (inventarioBean) elc.getELResolver().getValue(elc, null, "inventarioBean");
+                for (ArticulosFactura articulosFactura1 : factura.getArticulosFacturaList()) {
+                    b.updatePrendasArticulos(articulosFactura1.getArticuloIdarticulo(), articulosFactura1.getCantidad());
+                }
                 FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Factura creada exitosamente", null));
                 factura = new Factura();
                 articulosFacturas = new ArrayList<>();
@@ -164,39 +175,43 @@ public class FacturaBean implements Serializable {
         }
         getAllFacturas();
     }
-    
+
     /**
      * Return the bills generated in this month and year
+     *
      * @param month
      * @param year
-     * @return 
+     * @return
      */
-    public List<Factura> getFacturasByMonthandYear(int month, int year){
+    public List<Factura> getFacturasByMonthandYear(int month, int year) {
         return facturaFacade.getFacturaByMonthandYear(month, year);
     }
-    
+
     /**
      * Return the enabled or disabled bills
+     *
      * @param enable
-     * @return 
+     * @return
      */
-    public List<Factura> getEnabledorDisabledFacturas(boolean enable){
+    public List<Factura> getEnabledorDisabledFacturas(boolean enable) {
         return facturaFacade.getEnabledorDisabledFacturas(enable);
     }
-    
+
     /**
      * Return all the bills
-     * @return 
+     *
+     * @return
      */
-    public List<Factura> getAllFacturas(){
+    public List<Factura> getAllFacturas() {
         return facturaFacade.findAll();
     }
-    
+
     /**
      * Disable a bill
-     * @param factura 
+     *
+     * @param factura
      */
-    public void disabledFactura(Factura factura){
+    public void disabledFactura(Factura factura) {
         factura.setHabilitada(false);
         try {
             facturaFacade.edit(factura);
@@ -206,12 +221,13 @@ public class FacturaBean implements Serializable {
             System.err.println("Error al deshabilitar factura: " + e.getMessage());
         }
     }
-    
+
     /**
      * Enable a bill
-     * @param factura 
+     *
+     * @param factura
      */
-    public void enabledFactura(Factura factura){
+    public void enabledFactura(Factura factura) {
         factura.setHabilitada(true);
         try {
             facturaFacade.edit(factura);

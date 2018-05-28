@@ -31,7 +31,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "InventarioPrenda.findAll", query = "SELECT i FROM InventarioPrenda i")
     , @NamedQuery(name = "InventarioPrenda.findByIdinventarioPrenda", query = "SELECT i FROM InventarioPrenda i WHERE i.idinventarioPrenda = :idinventarioPrenda")
     , @NamedQuery(name = "InventarioPrenda.findByCantidadInicial", query = "SELECT i FROM InventarioPrenda i WHERE i.cantidadInicial = :cantidadInicial")
-    , @NamedQuery(name = "InventarioPrenda.findByCantidadActual", query = "SELECT i FROM InventarioPrenda i WHERE i.cantidadActual = :cantidadActual")})
+    , @NamedQuery(name = "InventarioPrenda.findByCantidadActual", query = "SELECT i FROM InventarioPrenda i WHERE i.cantidadActual = :cantidadActual")
+    , @NamedQuery(name = "InventarioPrenda.findByArticleandQuantity", query = "SELECT i FROM InventarioPrenda i WHERE i.articuloIdarticulo = :articulo AND i.cantidadActual >= :quantity")})
 public class InventarioPrenda implements Serializable {
 
     private static final long serialVersionUID = 1L;

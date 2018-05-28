@@ -5,6 +5,7 @@
  */
 package Beans;
 
+import Entities.Articulo;
 import Entities.InventarioPrenda;
 import Facade.InventarioPrendaFacade;
 import java.io.Serializable;
@@ -83,6 +84,23 @@ public class inventarioBean implements Serializable{
             }
         }
         return items;
+    }
+    
+    public Integer getPrendasArticulo(Articulo a){
+        List<InventarioPrenda> prendase = getPrendasExistentes();
+        Integer cantidad = 0;
+        for (InventarioPrenda inventarioPrenda1 : prendase) {
+            if (inventarioPrenda1.getArticuloIdarticulo().equals(a)) {
+                cantidad = cantidad + inventarioPrenda1.getCantidadActual();
+            }
+        }
+        return cantidad;
+    }
+    
+    public void updatePrendasArticulos(Articulo a, Integer cantidad){
+        InventarioPrenda prenda = facade.prendasArticulo(a, cantidad);
+        prenda.setCantidadActual(prenda.getCantidadActual() - cantidad);
+        facade.edit(prenda);
     }
     
     @PostConstruct

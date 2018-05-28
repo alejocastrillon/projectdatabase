@@ -5,7 +5,9 @@
  */
 package Facade;
 
+import Entities.Articulo;
 import Entities.InventarioPrenda;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +29,16 @@ public class InventarioPrendaFacade extends AbstractFacade<InventarioPrenda> {
 
     public InventarioPrendaFacade() {
         super(InventarioPrenda.class);
+    }
+    
+    public InventarioPrenda prendasArticulo(Articulo a, Integer cantidad){
+        try {
+            List<InventarioPrenda> prenda = getEntityManager().createNamedQuery("InventarioPrenda.findByArticleandQuantity").setParameter("articulo", a).setParameter("quantity", cantidad).getResultList();
+            return prenda.get(0);
+        } catch (Exception e) {
+            System.out.println("Error al conseguir prenda ..." + e.getLocalizedMessage());
+        }
+        return null;
     }
     
 }
