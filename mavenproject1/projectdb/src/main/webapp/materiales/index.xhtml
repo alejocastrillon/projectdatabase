@@ -19,17 +19,15 @@
         <!-- Current User info-->
         <ui:include src="../menu/header.xhtml"/>
         <!-- End current user-->
-        
+
         <!--Menu Section-->
         <ui:include src="../menu/nav.xhtml"/>
         <!--End Menu section-->
-        
+
         <div style="width: 80%; float: left;">
             <h:form id="crearMaterial" title="Crear Material">
                 <p:panel header="Crear Material">
                     <p:panelGrid columns="2" layout="grid">
-                        <p:outputLabel for="id_material" value="ID material: "/>
-                        <p:inputText id="id_material" value="#{materialBean.material.idmaterial}" required="True" requiredMessage="Es necesario ingresar el ID del material"/>
                         <p:outputLabel for="nombre" value="Nombre: "/>
                         <p:inputText id="nombre" value="#{materialBean.material.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del material"/>
                         <p:outputLabel for="unidad" value="Unidad: "/>
@@ -39,8 +37,8 @@
                     </p:panelGrid>
                     <p:commandButton value="Guardar" update="@this :tableMaterial" icon="fa fa-save" actionListener="#{materialBean.makeMaterial}"/>
                 </p:panel>
-                </h:form>
-            
+            </h:form>
+
             <p:dialog widgetVar="remMaterial" modal="true">
                 <h:form id="removeMaterial">
                     <p:outputLabel value="Desea eliminar el elemento #{materialBean.removeMaterial.nombre} ?"/>
@@ -51,7 +49,7 @@
                 </h:form>
             </p:dialog>
             <!-- End delete material dialog -->
-            
+
             <!--Edit material-->
             <p:dialog header="Editar material" widgetVar="editMaterial" modal="true">
                 <h:form id="editMat" title="Editar Material">
@@ -67,9 +65,9 @@
                 </h:form>
             </p:dialog>
             <!-- End edit material dialog-->
-                
-                 <!--Article's datatable-->
-                 <p:dataTable id="tableMaterial" value="#{materialBean.allMaterial}" var="datamaterial">
+
+            <!--Article's datatable-->
+            <p:dataTable id="tableMaterial" value="#{materialBean.allMaterial}" var="datamaterial">
                 <p:column headerText="Id Material">
                     <p:outputLabel value="#{datamaterial.idmaterial}"/>
                 </p:column>
@@ -85,9 +83,13 @@
                         <p:commandButton icon="fa fa-edit" update="@this :editMat" onclick="PF('editMaterial').show();">
                             <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.editMaterial()}"/>
                         </p:commandButton>
-                        <p:commandButton icon="fa fa-remove" update="@this :removeMaterial" onclick="PF('remMaterial').show();">
-                            <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.deleteMaterial(datamaterial)}"/>
-                        </p:commandButton>-->
+                        <p:commandButton icon="fa fa-remove" update="@this :tableMaterial :removeMaterial" actionListener="#{materialBean.deleteMaterial(datamaterial)}">
+                            <p:confirm header="Confirmacion" message="Esta seguro de eliminar el material #{datamaterial.nombre}?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Yes" type="button" update=":tableMaterial" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
                         <!-- End action button-->
                     </h:form>
                 </p:column>

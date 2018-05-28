@@ -24,12 +24,11 @@ import javax.faces.application.FacesMessage;
  *
  * @author alejandro
  */
-
 @ManagedBean
 @ViewScoped
 @SessionScoped
-public class materialBean implements Serializable{
-    
+public class materialBean implements Serializable {
+
     @EJB
     private MaterialFacade materialFacade;
     private Material material, editMateriales, removeMaterial;
@@ -55,9 +54,9 @@ public class materialBean implements Serializable{
     public void setMaterial(Material material) {
         this.material = material;
     }
-    
+
     //the function creates a material
-     public void makeMaterial(){
+    public void makeMaterial() {
         try {
             materialFacade.create(material);
             material = new Material();
@@ -67,8 +66,9 @@ public class materialBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
-     //edit a Material in database
-     public void editMaterial(){
+    //edit a Material in database
+
+    public void editMaterial() {
         try {
             materialFacade.edit(editMateriales);
             editMateriales = new Material();
@@ -94,23 +94,29 @@ public class materialBean implements Serializable{
     public void setRemoveMaterial(Material removeMaterial) {
         this.removeMaterial = removeMaterial;
     }
-     // Remove a material in the database
-          public void deleteMaterial(Material m){
-        try {
-            materialFacade.remove(m);
-            m = new Material();
-            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Material borrado exitosamente", null));
-        } catch (Exception e) {
-            System.err.println(e.getLocalizedMessage());
-            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
+    
+    /**
+     * Remove a material into database
+     * @param m 
+     */
+    public void deleteMaterial(Material m) {
+        if (m != null) {
+            try {
+                materialFacade.remove(m);
+                FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Material borrado exitosamente", null));
+            } catch (Exception e) {
+                System.err.println(e.getLocalizedMessage());
+                FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
+            }
         }
     }
-    public List<Material> getAllMaterial(){
+
+    public List<Material> getAllMaterial() {
         return materialFacade.findAll();
     }
-     
+
     @PostConstruct
-    public void init(){
+    public void init() {
         if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
             ELContext elc = FacesContext.getCurrentInstance().getELContext();
             UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
@@ -120,5 +126,5 @@ public class materialBean implements Serializable{
         editMateriales = new Material();
         removeMaterial = new Material();
     }
-    
+
 }
