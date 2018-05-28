@@ -19,25 +19,81 @@
         <!-- Current User info-->
         <ui:include src="../menu/header.xhtml"/>
         <!-- End current user-->
-        
+
         <!--Menu Section-->
         <ui:include src="../menu/nav.xhtml"/>
         <!--End Menu section-->
-        
+
         <div style="width: 80%; float: left;">
             <h:form id="crearMaterial" title="Crear Material">
                 <p:panel header="Crear Material">
                     <p:panelGrid columns="2" layout="grid">
                         <p:outputLabel for="nombre" value="Nombre: "/>
-                        <p:inputText id="nombre" value="#{materialBean.material.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del articulo"/>
+                        <p:inputText id="nombre" value="#{materialBean.material.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del material"/>
                         <p:outputLabel for="unidad" value="Unidad: "/>
                         <p:selectOneListbox id="unidad" value="#{materialBean.material.unidadMedida}" required="true" requiredMessage="Es necesario seleccionar una unidad de medida">
                             <f:selectItem itemLabel="Metros" itemValue="metros"/>
                         </p:selectOneListbox>
-                        
                     </p:panelGrid>
+                    <p:commandButton value="Guardar" update="@this :crearMaterial :tableMaterial" icon="fa fa-save" actionListener="#{materialBean.makeMaterial}"/>
                 </p:panel>
             </h:form>
+
+            <p:dialog widgetVar="remMaterial" modal="true">
+                <h:form id="removeMaterial">
+                    <p:outputLabel value="Desea eliminar el elemento #{materialBean.removeMaterial.nombre} ?"/>
+                    <p:panelGrid columns="2" layout="grid">
+                        <p:commandButton value="Si" icon="fa fa-check" actionListener="#{materialBean.deleteMaterial(datamaterial)}" onsuccess="@this.hide()"/>
+                        <p:commandButton value="No" icon="fa fa-close" onsuccess="@this.hide()"/>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+            <!-- End delete material dialog -->
+
+            <!--Edit material-->
+            <p:dialog header="Editar material" widgetVar="editMaterial" modal="true">
+                <h:form id="editMat" title="Editar Material">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="idMaterial" value="Id Material: "/>
+                        <p:inputText id="idMaterial" value="#{materialBean.editarMateriales.idmaterial}" required="True" requiredMessage="Es necesario ingresar el ID del material" />
+                        <p:outputLabel for="nombre" value="Nombre: "/>
+                        <p:inputText id="nombre" value="#{materialBean.editarMateriales.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del material"/>
+                        <p:outputLabel for="unidad_medida" value="Unidad medida: "/>
+                        <p:inputText id="unidad_medida" value="#{materialBean.editarMateriales.unidadMedida}" required="true" requiredMessage="Es necesario ingresar la  unidad de medida "/>
+                    </p:panelGrid>
+                    <p:commandButton value="Editar" onsuccess="@this.hide()" update="@this :tableMaterial" icon="fa fa-save" actionListener="#{materialBean.editMaterial}"/>
+                </h:form>
+            </p:dialog>
+            <!-- End edit material dialog-->
+
+            <!--Article's datatable-->
+            <p:dataTable id="tableMaterial" value="#{materialBean.allMaterial}" var="datamaterial">
+                <p:column headerText="Id Material">
+                    <p:outputLabel value="#{datamaterial.idmaterial}"/>
+                </p:column>
+                <p:column headerText="Nombre">
+                    <p:outputLabel value="#{datamaterial.nombre}"/>
+                </p:column>
+                <p:column headerText="Unidad de medida">
+                    <p:outputLabel value="#{datamaterial.unidadMedida}"/>
+                </p:column>
+                <p:column headerText="Acciones">
+                    <h:form>
+                        <!-- Action Buttons -->
+                        <p:commandButton icon="fa fa-edit" update="@this :editMat" onclick="PF('editMaterial').show();">
+                            <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.editarMateriales}"/>
+                        </p:commandButton>
+                        <p:commandButton icon="fa fa-remove" update="@this :tableMaterial :removeMaterial" actionListener="#{materialBean.deleteMaterial(datamaterial)}">
+                            <p:confirm header="Confirmacion" message="Esta seguro de eliminar el material #{datamaterial.nombre}?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" update=":tableMaterial" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                        <!-- End action button-->
+                    </h:form>
+                </p:column>
+            </p:dataTable>
         </div>
     </h:body>
 </html>
