@@ -102,8 +102,8 @@ public class UsuarioBean implements Serializable {
         }
         return currentUser != null;
     }
-    
-    public void redirect(String url){
+
+    public void redirect(String url) {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/projectdb/faces/" + url);
         } catch (IOException ex) {
@@ -111,10 +111,11 @@ public class UsuarioBean implements Serializable {
         }
     }
 
-    public void logOut(){
+    public void logOut() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         redirect("index.xhtml");
     }
+
     /**
      * Return the encrypted password
      *
@@ -141,13 +142,17 @@ public class UsuarioBean implements Serializable {
      * Insert a user in database
      */
     public void makeUser() {
-        usuario.setPassword(getMD5(usuario.getPassword()));
-        try {
-            usuarioFacade.create(usuario);
-            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario creado exitosamente", null));
-        } catch (Exception e) {
-            System.err.println("Error de creacion de usuario: " + e.getLocalizedMessage());
-            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
+        if (usuario.getIdusuario() >= 0) {
+            usuario.setPassword(getMD5(usuario.getPassword()));
+            try {
+                usuarioFacade.create(usuario);
+                FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario creado exitosamente", null));
+            } catch (Exception e) {
+                System.err.println("Error de creacion de usuario: " + e.getLocalizedMessage());
+                FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
+            }
+        } else {
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Numero de identificacion no valido", null));
         }
     }
 

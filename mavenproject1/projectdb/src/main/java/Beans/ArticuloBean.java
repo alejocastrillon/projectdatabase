@@ -9,6 +9,7 @@ package Beans;
 import Entities.Articulo;
 import Facade.ArticuloFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -109,6 +110,27 @@ public class ArticuloBean implements Serializable{
             System.err.println(e.getLocalizedMessage());
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
+    }
+    
+    public List<Articulo> resultDataAutoComplete(String query){
+        List<Articulo> articulos = getAllArticles();
+        List<Articulo> autoComplete = new ArrayList<>();
+        if (query.equals("")) {
+            return articulos;
+        } else {
+            for (Articulo articulo1 : articulos) {
+                String idArticulo = String.valueOf(articulo1.getIdarticulo());
+                String nombre = articulo1.getNombre();
+                if (validateDataAutoComplete(articulo1, idArticulo, nombre, query)) {
+                    autoComplete.add(articulo1);
+                }
+            }
+        }
+        return autoComplete;
+    }
+    
+    public boolean validateDataAutoComplete(Articulo a, String idArticulo, String nombre, String query){
+        return idArticulo.equals(query) || idArticulo.startsWith(query) || a.getNombre().equals(query) || a.getNombre().startsWith(query);
     }
     
     /**

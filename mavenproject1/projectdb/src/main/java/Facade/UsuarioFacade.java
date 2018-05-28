@@ -30,7 +30,7 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-
+    
     public Usuario validateLogIn(String username, String password) {
         try {
             List<Usuario> userLogin = new ArrayList<Usuario>();
@@ -43,4 +43,5 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         }
         return null;
     }
+    
 }

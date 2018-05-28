@@ -51,7 +51,6 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "nombre1")
     private String nombre1;
-    @Basic(optional = false)
     @Size(max = 45)
     @Column(name = "nombre2")
     private String nombre2;
@@ -85,10 +84,9 @@ public class Usuario implements Serializable {
         this.idusuario = idusuario;
     }
 
-    public Usuario(Integer idusuario, String nombre1, String nombre2, String apellido1, String username, String password) {
+    public Usuario(Integer idusuario, String nombre1, String apellido1, String username, String password) {
         this.idusuario = idusuario;
         this.nombre1 = nombre1;
-        this.nombre2 = nombre2;
         this.apellido1 = apellido1;
         this.username = username;
         this.password = password;

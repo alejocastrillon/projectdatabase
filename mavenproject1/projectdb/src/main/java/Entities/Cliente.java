@@ -146,10 +146,11 @@ public class Cliente implements Serializable {
 
     @Override
     public String toString() {
-        return this.nombre1 + " " + this.nombre2 + " " + this.apellido1 + " " + this.apellido2;
+        return "Entities.Cliente[ idcliente=" + idcliente + " ]";
     }
     
     public String toStringAutoComplete(){
         return String.valueOf(this.idcliente) + " - " + this.nombre1 + " " + this.nombre2 + " " + this.apellido1 + " " + this.apellido2;
     }
+    
 }

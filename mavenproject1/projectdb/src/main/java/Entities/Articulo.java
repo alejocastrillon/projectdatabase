@@ -62,6 +62,8 @@ public class Articulo implements Serializable {
     @Column(name = "precio_venta")
     private int precioVenta;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "articuloIdarticulo")
+    private List<InventarioPrenda> inventarioPrendaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "articuloIdarticulo")
     private List<ArticulosFactura> articulosFacturaList;
 
     public Articulo() {
@@ -119,6 +121,15 @@ public class Articulo implements Serializable {
     }
 
     @XmlTransient
+    public List<InventarioPrenda> getInventarioPrendaList() {
+        return inventarioPrendaList;
+    }
+
+    public void setInventarioPrendaList(List<InventarioPrenda> inventarioPrendaList) {
+        this.inventarioPrendaList = inventarioPrendaList;
+    }
+
+    @XmlTransient
     public List<ArticulosFactura> getArticulosFacturaList() {
         return articulosFacturaList;
     }
@@ -150,6 +161,10 @@ public class Articulo implements Serializable {
     @Override
     public String toString() {
         return "Entities.Articulo[ idarticulo=" + idarticulo + " ]";
+    }
+    
+    public String toStringAutoComplete(){
+        return String.valueOf(this.idarticulo) + " - " + this.nombre;
     }
     
 }

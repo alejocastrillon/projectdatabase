@@ -30,12 +30,6 @@ public class FacturaFacade extends AbstractFacade<Factura> {
         super(Factura.class);
     }
     
-    /**
-     * Return the bill items that was made in this month and year
-     * @param month
-     * @param year
-     * @return 
-     */
     public List<Factura> getFacturaByMonthandYear(int month, int year){
         try {
             List<Factura> facturas = getEntityManager().createNamedQuery("Factura.findByMonthandYear").setParameter("month", month).setParameter("year", year).getResultList();
@@ -55,5 +49,6 @@ public class FacturaFacade extends AbstractFacade<Factura> {
         }
         return null;
     }
+
     
 }

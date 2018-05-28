@@ -49,6 +49,7 @@ public class Factura implements Serializable {
     @Column(name = "idfactura")
     private Integer idfactura;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "fecha_venta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaVenta;
