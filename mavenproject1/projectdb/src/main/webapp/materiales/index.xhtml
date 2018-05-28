@@ -45,7 +45,7 @@
                 <h:form id="removeMaterial">
                     <p:outputLabel value="Desea eliminar el elemento #{materialBean.removeMaterial.nombre} ?"/>
                     <p:panelGrid columns="2" layout="grid">
-                        <p:commandButton value="Si" icon="fa fa-check" actionListener="#{materialBean.deleteMaterial}" onsuccess="@this.hide()"/>
+                        <p:commandButton value="Si" icon="fa fa-check" actionListener="#{materialBean.deleteMaterial(datamaterial)}" onsuccess="@this.hide()"/>
                         <p:commandButton value="No" icon="fa fa-close" onsuccess="@this.hide()"/>
                     </p:panelGrid>
                 </h:form>
@@ -85,8 +85,8 @@
                         <p:commandButton icon="fa fa-edit" update="@this :editMat" onclick="PF('editMaterial').show();">
                             <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.editMaterial()}"/>
                         </p:commandButton>
-                        <!---<p:commandButton icon="fa fa-remove" update="@this :remove :removeArt" onclick="PF('remArticle').show();">
-                            <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.deleteMaterial()}"/>
+                        <p:commandButton icon="fa fa-remove" update="@this :removeMaterial" onclick="PF('remMaterial').show();">
+                            <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.deleteMaterial(datamaterial)}"/>
                         </p:commandButton>-->
                         <!-- End action button-->
                     </h:form>

@@ -97,10 +97,10 @@ public class materialBean implements Serializable{
         this.removeMaterial = removeMaterial;
     }
      // Remove a material in the database
-          public void deleteMaterial(){
+          public void deleteMaterial(Material m){
         try {
-            materialFacade.remove(removeMaterial);
-            removeMaterial = new Material();
+            materialFacade.remove(m);
+            m = new Material();
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Material borrado exitosamente", null));
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
