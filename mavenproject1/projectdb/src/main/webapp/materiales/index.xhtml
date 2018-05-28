@@ -35,7 +35,7 @@
                             <f:selectItem itemLabel="Metros" itemValue="metros"/>
                         </p:selectOneListbox>
                     </p:panelGrid>
-                    <p:commandButton value="Guardar" update="@this :tableMaterial" icon="fa fa-save" actionListener="#{materialBean.makeMaterial}"/>
+                    <p:commandButton value="Guardar" update="@this :crearMaterial :tableMaterial" icon="fa fa-save" actionListener="#{materialBean.makeMaterial}"/>
                 </p:panel>
             </h:form>
 
@@ -54,12 +54,12 @@
             <p:dialog header="Editar material" widgetVar="editMaterial" modal="true">
                 <h:form id="editMat" title="Editar Material">
                     <p:panelGrid columns="2">
-                        <p:outputLabel for="idMaterial" value="ID Material: "/>
-                        <p:inputText id="idMaterial" value="#{materialBean.editMateriales.idmaterial}" required="True" requiredMessage="Es necesario ingresar el ID del material" />
+                        <p:outputLabel for="idMaterial" value="Id Material: "/>
+                        <p:inputText id="idMaterial" value="#{materialBean.editarMateriales.idmaterial}" required="True" requiredMessage="Es necesario ingresar el ID del material" />
                         <p:outputLabel for="nombre" value="Nombre: "/>
-                        <p:inputText id="nombre" value="#{materialBean.editMateriales.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del material"/>
+                        <p:inputText id="nombre" value="#{materialBean.editarMateriales.nombre}" required="true" requiredMessage="Es necesario ingresar el nombre del material"/>
                         <p:outputLabel for="unidad_medida" value="Unidad medida: "/>
-                        <p:inputText id="unidad_medida" value="#{materialBean.editMateriales.unidadMedida}" required="true" requiredMessage="Es necesario ingresar la  unidad de medida "/>
+                        <p:inputText id="unidad_medida" value="#{materialBean.editarMateriales.unidadMedida}" required="true" requiredMessage="Es necesario ingresar la  unidad de medida "/>
                     </p:panelGrid>
                     <p:commandButton value="Editar" onsuccess="@this.hide()" update="@this :tableMaterial" icon="fa fa-save" actionListener="#{materialBean.editMaterial}"/>
                 </h:form>
@@ -81,13 +81,13 @@
                     <h:form>
                         <!-- Action Buttons -->
                         <p:commandButton icon="fa fa-edit" update="@this :editMat" onclick="PF('editMaterial').show();">
-                            <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.editMaterial()}"/>
+                            <f:setPropertyActionListener value="#{datamaterial}" target="#{materialBean.editarMateriales}"/>
                         </p:commandButton>
                         <p:commandButton icon="fa fa-remove" update="@this :tableMaterial :removeMaterial" actionListener="#{materialBean.deleteMaterial(datamaterial)}">
                             <p:confirm header="Confirmacion" message="Esta seguro de eliminar el material #{datamaterial.nombre}?" icon="ui-icon-alert" />
                         </p:commandButton>
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                            <p:commandButton value="Yes" type="button" update=":tableMaterial" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Si" type="button" update=":tableMaterial" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                         </p:confirmDialog>
                         <!-- End action button-->

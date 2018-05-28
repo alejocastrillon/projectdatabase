@@ -31,7 +31,7 @@ public class materialBean implements Serializable {
 
     @EJB
     private MaterialFacade materialFacade;
-    private Material material, editMateriales, removeMaterial;
+    private Material material, editarMateriales, removeMaterial;
 
     /**
      * Creates a new instance of materialBean
@@ -70,8 +70,8 @@ public class materialBean implements Serializable {
 
     public void editMaterial() {
         try {
-            materialFacade.edit(editMateriales);
-            editMateriales = new Material();
+            materialFacade.edit(editarMateriales);
+            editarMateriales = new Material();
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Material editado exitosamente", null));
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
@@ -79,13 +79,15 @@ public class materialBean implements Serializable {
         }
     }
 
-    public Material getEditMateriales() {
-        return editMateriales;
+    public Material getEditarMateriales() {
+        return editarMateriales;
     }
 
-    public void setEditMateriales(Material editMateriales) {
-        this.editMateriales = editMateriales;
+    public void setEditarMateriales(Material editarMateriales) {
+        this.editarMateriales = editarMateriales;
     }
+
+    
 
     public Material getRemoveMaterial() {
         return removeMaterial;
@@ -123,7 +125,7 @@ public class materialBean implements Serializable {
             usuarioBean.redirect("index.xhtml");
         }
         material = new Material();
-        editMateriales = new Material();
+        editarMateriales = new Material();
         removeMaterial = new Material();
     }
 
