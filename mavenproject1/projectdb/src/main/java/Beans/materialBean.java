@@ -25,8 +25,6 @@ import javax.faces.application.FacesMessage;
  * @author alejandro
  */
 
-/*Debe de comenzar a programar */
-//otroas
 @ManagedBean
 @ViewScoped
 @SessionScoped
