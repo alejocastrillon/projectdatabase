@@ -87,8 +87,6 @@ public class materialBean implements Serializable {
         this.editarMateriales = editarMateriales;
     }
 
-    
-
     public Material getRemoveMaterial() {
         return removeMaterial;
     }
@@ -96,10 +94,11 @@ public class materialBean implements Serializable {
     public void setRemoveMaterial(Material removeMaterial) {
         this.removeMaterial = removeMaterial;
     }
-    
+
     /**
      * Remove a material into database
-     * @param m 
+     *
+     * @param m
      */
     public void deleteMaterial(Material m) {
         if (m != null) {
@@ -119,9 +118,9 @@ public class materialBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        ELContext elc = FacesContext.getCurrentInstance().getELContext();
+        UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
         if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
-            ELContext elc = FacesContext.getCurrentInstance().getELContext();
-            UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
             usuarioBean.redirect("index.xhtml");
         }
         material = new Material();

@@ -9,6 +9,8 @@
         <div style="width: 20%; margin-left: 80%">
             <p:outputLabel value="Usuario: #{session.getAttribute('username')}"/>
             <br/>
+            <p:outputLabel value="Tipo: #{session.getAttribute('typeUser')} "/>
+            <br/>
             <p:commandLink value="LogOut" actionListener="#{usuarioBean.logOut}"/>
         </div>
     </h:form>

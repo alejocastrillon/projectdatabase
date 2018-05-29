@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import sun.security.provider.MD5;
 
 /**
  *
@@ -36,6 +37,7 @@ public class UsuarioBean implements Serializable {
     private UsuarioFacade usuarioFacade;
     private Usuario usuario;
     private Usuario currentUser;
+    private Usuario editUser;
     private String username, password;
 
     /**
@@ -60,6 +62,14 @@ public class UsuarioBean implements Serializable {
         this.usuario = usuario;
     }
 
+    public Usuario getEditUser() {
+        return editUser;
+    }
+
+    public void setEditUser(Usuario editUser) {
+        this.editUser = editUser;
+    }
+    
     public Usuario getCurrentUser() {
         return currentUser;
     }
@@ -96,11 +106,33 @@ public class UsuarioBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Login exitoso", null));
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("current", currentUser);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", currentUser.getUsername());
-            redirect("articulos/create.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("typeUser", currentUser.getTypeUser());
+            if (currentUser.getTypeUser().equals("admin") || currentUser.getTypeUser().equals("inventario")) {
+                redirect("articulos/create.xhtml");
+            } else if (currentUser.getTypeUser().equals("ventas")) {
+                redirect("facturas/index.xhtml");
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login erroneo: username o contraseña erroneos", null));
         }
         return currentUser != null;
+    }
+    
+    /**
+     * Update a user into database
+     */
+    public void updateUser(){
+        if (!password.isEmpty()) {
+            editUser.setPassword(getMD5(password));
+        }
+        try {
+            usuarioFacade.edit(editUser);
+            editUser = new Usuario();
+            password = new String();
+            FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario modificado exitosamente", null));
+        } catch (Exception e) {
+            System.err.println("Error en la modificacion del usuario: " + e.getMessage());
+        }
     }
 
     public void redirect(String url) {
@@ -137,6 +169,10 @@ public class UsuarioBean implements Serializable {
             throw new RuntimeException(e);
         }
     }
+    
+    public List<Usuario> getEnabledUsers(boolean habilitado){
+        return usuarioFacade.getEnabledUsers(habilitado);
+    }
 
     /**
      * Insert a user in database
@@ -144,6 +180,7 @@ public class UsuarioBean implements Serializable {
     public void makeUser() {
         if (usuario.getIdusuario() >= 0) {
             usuario.setPassword(getMD5(usuario.getPassword()));
+            usuario.setHabilitado(true);
             try {
                 usuarioFacade.create(usuario);
                 FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario creado exitosamente", null));
@@ -170,6 +207,7 @@ public class UsuarioBean implements Serializable {
         username = new String();
         password = new String();
         usuario = new Usuario();
+        editUser = new Usuario();
     }
 
 }

@@ -34,7 +34,7 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public Usuario validateLogIn(String username, String password) {
         try {
             List<Usuario> userLogin = new ArrayList<Usuario>();
-            userLogin = getEntityManager().createNamedQuery("Usuario.logIn").setParameter("username", username).setParameter("password", password).getResultList();
+            userLogin = getEntityManager().createNamedQuery("Usuario.logIn").setParameter("username", username).setParameter("password", password).setParameter("habilitado", true).getResultList();
             if (userLogin.size() > 0) {
                 return userLogin.get(0);
             }
@@ -42,6 +42,16 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             System.err.println("Error Login: " + e.getMessage());
         }
         return null;
+    }
+    
+    public List<Usuario> getEnabledUsers(boolean habilitado){
+        List<Usuario> users = new ArrayList<Usuario>();
+        try {
+            users = getEntityManager().createNamedQuery("Usuario.findByHabilitado").setParameter("habilitado", habilitado).getResultList();
+        } catch (Exception e) {
+            System.err.println("Error conseguir usuarios: " + e.getLocalizedMessage());
+        }
+        return users;
     }
     
 }

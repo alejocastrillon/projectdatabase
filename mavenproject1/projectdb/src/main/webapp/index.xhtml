@@ -20,7 +20,6 @@
                     <p:outputLabel for="password" value="Contraseña: "/>
                     <p:password id="password" value="#{usuarioBean.password}" required="true" requiredMessage="Es necesario ingresar la contraseña"/>
                     <p:commandButton value="Iniciar Sesion" icon="fa fa-key" actionListener="#{usuarioBean.validateLogin}"/>
-                    <p:commandButton value="Registrar usuario" icon="fa fa-user-plus" process="@this" actionListener="#{usuarioBean.redirect('usuarios/sign_up.xhtml')}"/>
                 </p:panelGrid>
             </p:panel>
         </h:form>

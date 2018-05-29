@@ -34,10 +34,11 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByNombre1", query = "SELECT u FROM Usuario u WHERE u.nombre1 = :nombre1")
     , @NamedQuery(name = "Usuario.findByNombre2", query = "SELECT u FROM Usuario u WHERE u.nombre2 = :nombre2")
     , @NamedQuery(name = "Usuario.findByApellido1", query = "SELECT u FROM Usuario u WHERE u.apellido1 = :apellido1")
+    , @NamedQuery(name = "Usuario.findByHabilitado", query = "SELECT u FROM Usuario u WHERE u.habilitado = :habilitado")
     , @NamedQuery(name = "Usuario.findByApellido2", query = "SELECT u FROM Usuario u WHERE u.apellido2 = :apellido2")
     , @NamedQuery(name = "Usuario.findByUsername", query = "SELECT u FROM Usuario u WHERE u.username = :username")
     , @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")
-    , @NamedQuery(name = "Usuario.logIn", query = "SELECT u FROM Usuario u WHERE u.username = :username AND u.password = :password")})
+    , @NamedQuery(name = "Usuario.logIn", query = "SELECT u FROM Usuario u WHERE u.username = :username AND u.password = :password AND u.habilitado = :habilitado")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,6 +73,15 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "password")
     private String password;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "type_user")
+    private String typeUser;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "habilitado")
+    private boolean habilitado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdusuario")
     private List<Factura> facturaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdusuario")
@@ -148,6 +158,22 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
+    public String getTypeUser() {
+        return typeUser;
+    }
+
+    public void setTypeUser(String typeUser) {
+        this.typeUser = typeUser;
+    }
+
+    public boolean isHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(boolean habilitado) {
+        this.habilitado = habilitado;
+    }
+
     @XmlTransient
     public List<Factura> getFacturaList() {
         return facturaList;
@@ -190,5 +216,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "Entities.Usuario[ idusuario=" + idusuario + " ]";
     }
-    
+
 }

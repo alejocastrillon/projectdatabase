@@ -5,7 +5,6 @@
  */
 package Beans;
 
-
 import Entities.Articulo;
 import Facade.ArticuloFacade;
 import java.io.Serializable;
@@ -27,11 +26,12 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @ViewScoped
 @SessionScoped
-public class ArticuloBean implements Serializable{
+public class ArticuloBean implements Serializable {
 
     @EJB
     private ArticuloFacade articuloFacade;
     private Articulo articulo, editArticulo, removeArticulo;
+
     /**
      * Creates a new instance of ArticuloBean
      */
@@ -69,11 +69,11 @@ public class ArticuloBean implements Serializable{
     public void setRemoveArticulo(Articulo removeArticulo) {
         this.removeArticulo = removeArticulo;
     }
-    
+
     /**
      * Insert a new article in database
      */
-    public void makeArticle(){
+    public void makeArticle() {
         try {
             articuloFacade.create(articulo);
             articulo = new Articulo();
@@ -83,11 +83,11 @@ public class ArticuloBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
-    
+
     /**
      * Edit an article in database
      */
-    public void editArticle(){
+    public void editArticle() {
         try {
             articuloFacade.edit(editArticulo);
             editArticulo = new Articulo();
@@ -97,11 +97,11 @@ public class ArticuloBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
-    
+
     /**
      * Remove an article in database
      */
-    public void deleteArticle(){
+    public void deleteArticle() {
         try {
             articuloFacade.remove(removeArticulo);
             removeArticulo = new Articulo();
@@ -111,8 +111,8 @@ public class ArticuloBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
-    
-    public List<Articulo> resultDataAutoComplete(String query){
+
+    public List<Articulo> resultDataAutoComplete(String query) {
         List<Articulo> articulos = getAllArticles();
         List<Articulo> autoComplete = new ArrayList<>();
         if (query.equals("")) {
@@ -128,24 +128,25 @@ public class ArticuloBean implements Serializable{
         }
         return autoComplete;
     }
-    
-    public boolean validateDataAutoComplete(Articulo a, String idArticulo, String nombre, String query){
+
+    public boolean validateDataAutoComplete(Articulo a, String idArticulo, String nombre, String query) {
         return idArticulo.equals(query) || idArticulo.startsWith(query) || a.getNombre().equals(query) || a.getNombre().startsWith(query);
     }
-    
+
     /**
      * Return all the articles
-     * @return 
+     *
+     * @return
      */
-    public List<Articulo> getAllArticles(){
+    public List<Articulo> getAllArticles() {
         return articuloFacade.findAll();
     }
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
+        ELContext elc = FacesContext.getCurrentInstance().getELContext();
+        UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
         if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
-            ELContext elc = FacesContext.getCurrentInstance().getELContext();
-            UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
             usuarioBean.redirect("index.xhtml");
         }
         articulo = new Articulo();

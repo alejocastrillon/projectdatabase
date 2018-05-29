@@ -18,6 +18,7 @@ import javax.ejb.EJB;
 import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
@@ -27,6 +28,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @ViewScoped
+@SessionScoped
 public class FacturaBean implements Serializable {
 
     @EJB
@@ -240,14 +242,15 @@ public class FacturaBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        ELContext elc = FacesContext.getCurrentInstance().getELContext();
+        UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
         if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
-            ELContext elc = FacesContext.getCurrentInstance().getELContext();
-            UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
             usuarioBean.redirect("index.xhtml");
         }
         factura = new Factura();
         articulosFacturas = new ArrayList<>();
         articulosFactura = new ArticulosFactura();
         removeArticulosFactura = new ArticulosFactura();
+        return;
     }
 }

@@ -29,12 +29,13 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @ViewScoped
 @SessionScoped
-public class inventarioBean implements Serializable{
+public class inventarioBean implements Serializable {
 
     private InventarioPrenda inventarioPrenda;
-    
+
     @EJB
     private InventarioPrendaFacade facade;
+
     /**
      * Creates a new instance of inventarioBean
      */
@@ -56,11 +57,11 @@ public class inventarioBean implements Serializable{
     public void setFacade(InventarioPrendaFacade facade) {
         this.facade = facade;
     }
-    
+
     /**
      * Add inventario into db
      */
-    public void makeInventario(){
+    public void makeInventario() {
         try {
             inventarioPrenda.setCantidadActual(inventarioPrenda.getCantidadInicial());
             facade.create(inventarioPrenda);
@@ -70,14 +71,14 @@ public class inventarioBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getLocalizedMessage(), null));
         }
     }
-    
-    public List<InventarioPrenda> getAll(){
+
+    public List<InventarioPrenda> getAll() {
         return facade.findAll();
     }
-    
-    public List<InventarioPrenda> getPrendasExistentes(){
+
+    public List<InventarioPrenda> getPrendasExistentes() {
         List<InventarioPrenda> allitems = getAll();
-        List<InventarioPrenda> items = new  ArrayList<>();
+        List<InventarioPrenda> items = new ArrayList<>();
         for (InventarioPrenda allitem : allitems) {
             if (allitem.getCantidadActual() > 0) {
                 items.add(allitem);
@@ -85,8 +86,8 @@ public class inventarioBean implements Serializable{
         }
         return items;
     }
-    
-    public Integer getPrendasArticulo(Articulo a){
+
+    public Integer getPrendasArticulo(Articulo a) {
         List<InventarioPrenda> prendase = getPrendasExistentes();
         Integer cantidad = 0;
         for (InventarioPrenda inventarioPrenda1 : prendase) {
@@ -96,21 +97,21 @@ public class inventarioBean implements Serializable{
         }
         return cantidad;
     }
-    
-    public void updatePrendasArticulos(Articulo a, Integer cantidad){
+
+    public void updatePrendasArticulos(Articulo a, Integer cantidad) {
         InventarioPrenda prenda = facade.prendasArticulo(a, cantidad);
         prenda.setCantidadActual(prenda.getCantidadActual() - cantidad);
         facade.edit(prenda);
     }
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
+        ELContext elc = FacesContext.getCurrentInstance().getELContext();
+        UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
         if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("current") == null) {
-            ELContext elc = FacesContext.getCurrentInstance().getELContext();
-            UsuarioBean usuarioBean = (UsuarioBean) elc.getELResolver().getValue(elc, null, "usuarioBean");
             usuarioBean.redirect("index.xhtml");
         }
         inventarioPrenda = new InventarioPrenda();
     }
-    
+
 }
